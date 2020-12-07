@@ -1,0 +1,7 @@
+[user]
+	email = meegle84@gmail.com
+	name = Miguel Angel Blanco Muñoz
+[color]
+	ui = auto
+[merge]
+	conflictstyle = diff3
