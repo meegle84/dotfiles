@@ -1,0 +1,17 @@
+# search in history UP
+bindkey "^[[A" history-search-backward
+# search in history DOWN
+bindkey "^[[B" history-search-forward
+
+# go to begin
+bindkey "^[[H" beginning-of-line
+# go to end
+bindkey "^[[F" end-of-line
+
+# Enable searching through history
+bindkey '^R' history-incremental-pattern-search-backward
+
+# Make Tab autocomplete regardless of filename case
+set completion-ignore-case on
+# List all matches in case multiple possible completions are possible
+set show-all-if-ambiguous on
