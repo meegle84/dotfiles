@@ -1,0 +1,10 @@
+#!/bin/bash
+brewup () {
+  brew update;
+  brew upgrade;
+  brew update --cask;
+  brew upgrade --cask;
+  brew cleanup;
+  brew doctor;
+  brew bundle dump --describe  --force;
+}
