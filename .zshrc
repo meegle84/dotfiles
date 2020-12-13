@@ -12,6 +12,7 @@ SAVEHIST=$HISTSIZ
 setopt hist_ignore_all_dups # remove older duplicate entries from history
 setopt hist_reduce_blanks # remove superfluous blanks from history items
 setopt share_history # share history between different instances of the shell
+setopt inc_append_history # save history entries as soon as they are entered
 
 # exports
 if [ -f $HOME/.env ]; then
@@ -41,6 +42,8 @@ source $HOME/.zsh/fzf-tab/fzf-tab.plugin.zsh
 zstyle ":completion:*:git-checkout:*" sort false
 zstyle ':completion:*:descriptions' format '[%d]'
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# Auto complete with case insenstivity
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
 
 # enable autosuggestions
