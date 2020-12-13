@@ -14,6 +14,8 @@ brew "aircrack-ng"
 brew "awk"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# Fish completion for brew-cask
+brew "brew-cask-completion"
 # Install pip packages as homebrew formulae
 brew "brew-pip"
 # Change macOS display brightness from the command-line
@@ -66,6 +68,8 @@ brew "gitmoji"
 brew "graphicsmagick"
 # ASCII-art displaying typo-corrector for commands
 brew "gti"
+# Convert source code to formatted text with syntax highlighting
+brew "highlight"
 # Bash and zsh history suggest box
 brew "hstr"
 # Improved top (interactive process viewer)
@@ -74,6 +78,8 @@ brew "htop"
 brew "jq"
 # Interactive environments for writing and running code
 brew "jupyterlab"
+# Pager program similar to more
+brew "less"
 # Curses-based tool for viewing and analyzing log files
 brew "lnav"
 # Rainbows and unicorns in your console!
@@ -160,8 +166,6 @@ brew "zsh"
 brew "zsh-autosuggestions"
 # Additional completion definitions for zsh
 brew "zsh-completions"
-# Zsh curses-based tools, e.g. multi-word history searcher
-brew "zsh-navigation-tools"
 # Fish shell like syntax highlighting for zsh
 brew "zsh-syntax-highlighting"
 # ZSH plugin that reminds you to use existing aliases for commands you just typed
@@ -200,6 +204,7 @@ cask "iexplorer"
 cask "inkscape"
 cask "iterm2"
 cask "itsycal"
+cask "keka"
 cask "libreoffice"
 cask "mactracker"
 cask "megasync"
@@ -241,6 +246,5 @@ cask "zoom"
 mas "Apple Configurator 2", id: 1037126344
 mas "Duplicate Photos Finder", id: 984929789
 mas "MindNode", id: 1289197285
-mas "screendimmer", id: 562058942
 mas "screendimmer", id: 562058942
 mas "Xcode", id: 497799835
