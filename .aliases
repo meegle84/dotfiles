@@ -1,33 +1,34 @@
 alias sudo='sudo ' # expand completion for sudo
-alias vim='nvim' # neovim instead of vim
-alias v='vim' # edit command
-alias ls='lsd -h --group-dirs first' # lsd intedad of ls, readable, dirs first
-alias dir='ls' #old school DOS
-alias ll='ls -l'
-alias la='ls -A'
-alias l.='lsd -a | egrep "^\."'
-alias cat='ccat' # colorized cat
+type nvim > /dev/null 2>&1 && alias vim='nvim' # neovim instead of vim
+alias e='vim' # edit command
+type lsd > /dev/null 2>&1 && alias ls='lsd -h --group-dirs first' # lsd intedad of ls, readable, dirs first
+alias dir='ls' # oldschool DOS
+alias ll='ls -l' # long list
+alias la='ls -A' # show hidden also
+alias lla='ls -lA' # show hidden also, long list
+alias l.='lsd -a | egrep "^\."' # show only hidden
+type ccat > /dev/null 2>&1 && alias cat='ccat' # colorized cat
 alias mv='mv -iv' #  ask before move
 alias rm='rm -iv' # ask before remove
 alias cp='cp -iv' # ask before copy
 alias clr='clear' # clear abreviation
-alias df='dfc ' # colorized
+type dfc > /dev/null 2>&1 && alias df='dfc ' # colorized
 alias du='du -ch' # readable size
-alias wget='wget -c'
-alias pping='prettyping'
-alias mkdir='mkdir -pv'
-alias less='highlight -O xterm256 $1 | less -R' # less colorized
+alias wget='wget -c' # continue partially-downloaded file
+alias pping='prettyping' # ping colorized
+alias mkdir='mkdir -pv' # create parents and vervose
+type ccat > /dev/null 2>&1 && alias less='less -R $1 | ccat' # less colorized
 alias diff='colordiff ' # diff colorized
 alias ~="cd ~" # ~ home
 alias home='cd ~' # ~ home
 alias whoamic='figlet $(whoami) | lolcat' # colored ascii whoami
 alias -- -='cd -' # - to go back to previous directory
-alias ..='cd ../' # one folder up
 alias cd..='cd ../' # one folder up
+alias ..='cd ../' # one folder up
 alias ...='cd ../../' # two folder up
-alias grep='grep --color=auto'
-alias egrep='egrep --color=auto'
-alias fgrep='fgrep --color=auto'
+alias grep='grep --color=auto' # colorized
+alias egrep='egrep --color=auto' # colorized
+alias fgrep='fgrep --color=auto' # colorized
 alias publicip='dig +short myip.opendns.com @resolver1.opendns.com' # public ip address
 alias localip='ifconfig -l | xargs -n1 ipconfig getifaddr' # local ip address
 alias mountReadWrite='/sbin/mount -uw /'    # mountReadWrite:   For use when booted into single-user
