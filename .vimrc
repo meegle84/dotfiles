@@ -1,8 +1,9 @@
 set nocompatible           " Vim defaults rather than vi ones. Keep at top.
 filetype plugin indent on  " Enable filetype-specific settings.
 syntax on                  " Enable syntax highlighting.
+colorscheme delek          " Select colorscheme
 set backspace=2            " Make the backspace behave as most applications.
-set cursorline             " Enable cursorline highlight 
+set cursorline             " Enable cursorline highlight
 set autoindent             " Use current indent for new lines.
 set wildmenu               " Better tab completion in the commandline.
 set wildmode=list:longest  " List all matches and complete to the longest match.
