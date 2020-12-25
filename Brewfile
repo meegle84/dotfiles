@@ -50,6 +50,8 @@ brew "docker"
 brew "dos2unix"
 # Emoji on the command-line :scream:
 brew "emojify"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
 # Banner-like program prints strings as ASCII art
 brew "figlet"
 # Collection of GNU find, xargs, and locate
@@ -132,7 +134,7 @@ brew "smartmontools"
 brew "speedtest-cli"
 # Cross-shell prompt for astronauts
 brew "starship"
-# Programatically correct mistyped console commands
+# Programmatically correct mistyped console commands
 brew "thefuck"
 # Simplified and community-driven man pages
 brew "tldr"
@@ -144,8 +146,6 @@ brew "toilet"
 brew "trash"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
-# Extract, view, and test RAR archives
-brew "unrar"
 # Generator for LS_COLORS with support for multiple color themes
 brew "vivid"
 # Add progress bars to command-line applications
@@ -214,7 +214,6 @@ cask "nordvpn"
 cask "onyx"
 cask "openineditor-lite"
 cask "openinterminal-lite"
-cask "pref-setter"
 cask "pycharm"
 cask "qbittorrent"
 cask "qlimagesize"
