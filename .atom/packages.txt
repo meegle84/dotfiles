@@ -1,0 +1,14 @@
+atom-bracket-highlight
+file-icons
+highlight-line
+highlight-selected
+minimap
+minimap-find-and-replace
+minimap-git-diff
+minimap-lens
+minimap-pigments
+minimap-plus
+minimap-selection
+pigments
+split-diff
+tree-view-autoresize
