@@ -104,6 +104,8 @@ brew "neovim"
 brew "nmap"
 # Renders an animated, color, ANSI-text loop of the Poptart Cat
 brew "nyancat"
+# Development kit for the Java programming language
+brew "openjdk"
 # 7-Zip (high compression file archiver) implementation
 brew "p7zip"
 # Command-line tool to generate, analyze, convert and manipulate colors
@@ -207,6 +209,7 @@ cask "megasync"
 cask "mounty"
 cask "netspot"
 cask "nordvpn"
+cask "obs"
 cask "onyx"
 cask "openineditor-lite"
 cask "openinterminal-lite"
