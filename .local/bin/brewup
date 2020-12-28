@@ -1,8 +1,21 @@
-#!/bin/bash
-brewup () {
-  brew update;
-  brew upgrade;
-  brew cleanup;
-  brew doctor;
-  brew bundle dump --describe  --force;
-}
+#!/bin/zsh
+autoload -U colors
+colors
+# Brew Diagnotic
+echo $fg[yellow] "==>" $reset_color "Running Brew Diagnotic..."
+brew doctor
+brew missing
+echo $fg[green] "==>" $reset_color "Brew Diagnotic Finished."
+
+# Brew packages update and cleanup
+echo $fg[yellow] "==>" $reset_color "Running Updates..."
+brew update
+brew outdated
+brew upgrade
+brew cleanup -s
+echo $fg[green] "==>" $reset_color "Updates Finished"
+
+# Creating Dump File
+echo $fg[yellow] "==>" $reset_color "Running Brew Bundle Dump..."
+brew bundle dump --force
+echo $fg[green] "==>" $reset_color "Bundle Dump Finished"
