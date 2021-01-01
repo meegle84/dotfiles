@@ -5,3 +5,14 @@
 	ui = auto
 [merge]
 	conflictstyle = diff3
+[core]
+	editor = atom --wait
+[alias]
+	co = checkout
+	br = branch
+	cm = commit
+	st = status
+	po = push origin
+	aa = add -A .
+	cp = cherry-pick
+	tree = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
