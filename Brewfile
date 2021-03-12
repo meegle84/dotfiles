@@ -50,8 +50,12 @@ brew "docker"
 brew "dos2unix"
 # Emoji on the command-line :scream:
 brew "emojify"
+# Modern replacement for 'ls'
+brew "exa"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
+# Play, record, convert, and stream audio and video
+brew "ffmpeg"
 # Banner-like program prints strings as ASCII art
 brew "figlet"
 # Collection of GNU find, xargs, and locate
@@ -172,72 +176,128 @@ brew "zsh-completions"
 brew "zsh-syntax-highlighting"
 # ZSH plugin that reminds you to use existing aliases for commands you just typed
 brew "zsh-you-should-use"
+# GPU-accelerated terminal emulator
 cask "alacritty"
+# Application uninstaller
 cask "appcleaner"
+# Backup and restore SD cards, USB drives, external HDD, etc
 cask "applepi-baker"
+# Open-source electronics prototyping platform
 cask "arduino"
+# Text editor
 cask "atom"
-cask "bettertouchtool"
+# Cryptocurrency exchange
 cask "binance"
+# Web browser focusing on privacy
 cask "brave-browser"
+# Tool to list all active shortcuts of the current application
 cask "cheatsheet"
+# Tool to remove unnecessary files and folders from disk
 cask "cleanmymac"
+# Tool to show live information about the batteries in various devices
 cask "coconutbattery"
+# Tool to run Windows software
 cask "crossover"
+# Voice and text chat software
 cask "discord"
+# Tool to hide status bar icons
 cask "dozer"
+# Client for the Dropbox cloud storage service
 cask "dropbox"
+# Desktop wallet for cryptocurrency assets
 cask "exodus"
+# Web browser
 cask "firefox"
 cask "font-roboto-mono-nerd-font"
+# Disk space cleaner that finds and deletes duplicated and similar files
 cask "gemini"
+# Free and open-source image editor
 cask "gimp"
+# Desktop app for learning Git and GitHub
 cask "git-it"
+# Git client focusing on productivity
 cask "gitkraken"
 cask "google-backup-and-sync"
+# Web browser
 cask "google-chrome"
+# Virtual globe
 cask "google-earth-pro"
+# Open-source video transcoder
 cask "handbrake"
+# Tool to access information from available hardware sensors
 cask "hwsensors"
+# iOS device backup software and file manager
 cask "iexplorer"
+# Vector graphics editor
 cask "inkscape"
+# Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
+# Menu bar calendar
 cask "itsycal"
+# File archiver
 cask "keka"
+# Office suite
 cask "libreoffice"
+# Detailed information on every Apple product ever made
 cask "mactracker"
+# Syncs files between computers and MEGA Cloud drives
 cask "megasync"
+# Re-mounts write-protected NTFS volumes
 cask "mounty"
+# WiFi site survey software and WiFi scanner
 cask "netspot"
+# VPN client for secure internet access and private browsing
 cask "nordvpn"
+# Verify system files structure, run miscellaneous maintenance and more
 cask "onyx"
+# Finder Toolbar app to open the current directory in Editor
 cask "openineditor-lite"
+# Finder Toolbar app to open the current directory in Terminal
 cask "openinterminal-lite"
+# IDE for professional Python development
 cask "pycharm"
+# Peer to peer Bitorrent client
 cask "qbittorrent"
+# Display image info and preview unsupported formats in QuickLook
 cask "qlimagesize"
+# QuickLook generator for Markdown files
 cask "qlmarkdown"
 cask "qlstephen"
 cask "qlvideo"
 cask "quicknfo"
+# Move and resize windows using keyboard shortcuts or snap areas
 cask "rectangle"
 cask "soulseek"
+# Music streaming service
 cask "spotify"
+# Video game digital distribution service
 cask "steam"
 cask "superproductivity"
+# Remote access and connectivity software focused on security
 cask "teamviewer"
+# Desktop client for Telegram messenger
 cask "telegram-desktop"
+# Temperature monitoring, fan control and diagnostics
 cask "tg-pro"
+# Web browser focusing on security
 cask "tor-browser"
+# Tool to install Linux/BSD distributions to a partition or USB drive
 cask "unetbootin"
+# Free and open-source hosted hypervisor for x86 virtualization
 cask "virtualbox"
+# Multimedia player
 cask "vlc"
+# Desktop client for WhatsApp
 cask "whatsapp"
+# Network protocol analyzer
 cask "wireshark"
+# Open-source version of the X.Org X Window System
 cask "xquartz"
+# Video communication and virtual meeting platform
 cask "zoom"
 mas "Apple Configurator 2", id: 1037126344
 mas "Duplicate Photos Finder", id: 984929789
+mas "Dynaper", id: 1435296403
 mas "MindNode", id: 1289197285
 mas "screendimmer", id: 562058942
 mas "Xcode", id: 497799835
