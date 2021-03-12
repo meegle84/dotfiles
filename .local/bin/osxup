@@ -1,0 +1,21 @@
+#!/bin/zsh
+autoload -U colors
+colors
+
+# OSX Updates
+echo $fg[yellow] "==>" $reset_color "Finding OSX Updates..."
+softwareupdate -l
+echo $fg[green] "==>" $reset_color "Finding OSX Updates Finished."
+
+echo $fg[yellow] "==>" $reset_color "Installing OSX Updates..."
+softwareupdate -i -a
+echo $fg[green] "==>" $reset_color "Installing OSX Updates Finished."
+
+# AppStore Updates
+echo $fg[yellow] "==>" $reset_color "Finding AppStore Updates..."
+mas outdated
+echo $fg[green] "==>" $reset_color "Finding AppStore Updates Finished."
+
+echo $fg[yellow] "==>" $reset_color "Installing AppStore Updates..."
+mas upgrade
+echo $fg[green] "==>" $reset_color "Installing AppStore Updates Finished."
