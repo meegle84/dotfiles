@@ -1,6 +1,6 @@
 alias sudo='sudo ' # expand completion for sudo
 type nvim > /dev/null 2>&1 && alias vim='nvim' # neovim instead of vim
-alias e='vim' # edit command
+alias v='vim' # edit command
 type lsd > /dev/null 2>&1 && alias ls='lsd -h --group-dirs first' # lsd intedad of ls, readable, dirs first
 alias dir='ls' # oldschool DOS
 alias ll='ls -l' # long list
