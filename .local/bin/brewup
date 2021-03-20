@@ -1,11 +1,11 @@
 #!/bin/zsh
 autoload -U colors
 colors
-# Brew Diagnotic
-echo $fg[yellow] "==>" $reset_color "Running Brew Diagnotic..."
+# Brew Diagnostic
+echo $fg[yellow] "==>" $reset_color "Running Brew Diagnostic..."
 brew doctor
 brew missing
-echo $fg[green] "==>" $reset_color "Brew Diagnotic Finished."
+echo $fg[green] "==>" $reset_color "Brew Diagnostic Finished."
 
 # Brew packages update and cleanup
 echo $fg[yellow] "==>" $reset_color "Running Updates..."
