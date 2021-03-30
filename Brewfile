@@ -296,12 +296,7 @@ cask "xquartz"
 # Video communication and virtual meeting platform
 cask "zoom"
 mas "Apple Configurator 2", id: 1037126344
-mas "Apple Configurator 2", id: 1037126344
 mas "Duplicate Photos Finder", id: 984929789
-mas "Duplicate Photos Finder", id: 984929789
-mas "MindNode", id: 1289197285
-mas "MindNode", id: 1289197285
-mas "screendimmer", id: 562058942
 mas "screendimmer", id: 562058942
 mas "Xcode", id: 497799835
 mas "Xcode", id: 497799835
