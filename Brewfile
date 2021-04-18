@@ -24,6 +24,8 @@ brew "brightness"
 brew "broot"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.9"
+# GNU File, Shell, and Text utilities
+brew "coreutils"
 # Emacs dependency management
 brew "cask"
 # Like cat but displays content with syntax highlighting
@@ -34,8 +36,6 @@ brew "cmatrix"
 brew "colordiff"
 # Wrapper around make to colorize the output
 brew "colormake"
-# GNU File, Shell, and Text utilities
-brew "coreutils"
 # Configurable talking characters in ASCII art
 brew "cowsay"
 # Get a file from an HTTP, HTTPS or FTP server
@@ -54,14 +54,20 @@ brew "emojify"
 brew "exa"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
+# Simple file manager written in bash
+brew "fff"
 # Play, record, convert, and stream audio and video
 brew "ffmpeg"
 # Banner-like program prints strings as ASCII art
 brew "figlet"
 # Collection of GNU find, xargs, and locate
 brew "findutils"
+# Command-line outline and bitmap font editor/converter
+brew "fontforge"
 # Infamous electronic fortune-cookie generator
 brew "fortune"
+# Command-line JSON processing tool
+brew "fx"
 # Command-line fuzzy finder written in Go
 brew "fzf"
 # Distributed revision control system
@@ -100,6 +106,8 @@ brew "mas"
 brew "moreutils"
 # Powerful paging program
 brew "most"
+# Interactive cheatsheet tool for the command-line
+brew "navi"
 # Fast, highly customisable system info script
 brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
@@ -194,6 +202,8 @@ cask "brave-browser"
 cask "cheatsheet"
 # Tool to remove unnecessary files and folders from disk
 cask "cleanmymac"
+# C and C++ IDE
+cask "clion"
 # Tool to show live information about the batteries in various devices
 cask "coconutbattery"
 # Tool to run Windows software
@@ -202,8 +212,8 @@ cask "crossover"
 cask "discord"
 # Tool to hide status bar icons
 cask "dozer"
-# Client for the Dropbox cloud storage service
-cask "dropbox"
+# Utility to finds and fix problems on computer systems
+cask "etrecheckpro"
 # Desktop wallet for cryptocurrency assets
 cask "exodus"
 # Web browser
@@ -217,7 +227,6 @@ cask "gimp"
 cask "git-it"
 # Git client focusing on productivity
 cask "gitkraken"
-cask "google-backup-and-sync"
 # Web browser
 cask "google-chrome"
 # Virtual globe
@@ -242,6 +251,8 @@ cask "libreoffice"
 cask "mactracker"
 # Syncs files between computers and MEGA Cloud drives
 cask "megasync"
+# Open-source DJ software
+cask "mixxx"
 # Re-mounts write-protected NTFS volumes
 cask "mounty"
 # WiFi site survey software and WiFi scanner
@@ -268,6 +279,8 @@ cask "quicknfo"
 # Move and resize windows using keyboard shortcuts or snap areas
 cask "rectangle"
 cask "soulseek"
+# Sound and audio controller
+cask "soundsource"
 # Music streaming service
 cask "spotify"
 # Video game digital distribution service
@@ -295,8 +308,7 @@ cask "wireshark"
 cask "xquartz"
 # Video communication and virtual meeting platform
 cask "zoom"
-mas "Apple Configurator 2", id: 1037126344
-mas "Duplicate Photos Finder", id: 984929789
+mas "MindNode", id: 1289197285
+mas "Red Lines Tools", id: 1469400117
 mas "screendimmer", id: 562058942
-mas "Xcode", id: 497799835
 mas "Xcode", id: 497799835
