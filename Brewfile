@@ -122,8 +122,6 @@ brew "openjdk"
 brew "p7zip"
 # Command-line tool to generate, analyze, convert and manipulate colors
 brew "pastel"
-# Search PDFs for strings matching a regular expression
-brew "pdfgrep"
 # Simplistic interactive filtering tool
 brew "peco"
 # Colored logcat script to show entries only for specified app
@@ -194,6 +192,8 @@ cask "applepi-baker"
 cask "arduino"
 # Text editor
 cask "atom"
+# Tool to flash OS images to SD cards & USB drives
+cask "balenaetcher"
 # Cryptocurrency exchange
 cask "binance"
 # Web browser focusing on privacy
