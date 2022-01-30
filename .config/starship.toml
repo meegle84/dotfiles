@@ -1,1 +1,37 @@
+# Don't print a new line at the start of the prompt
 add_newline = false
+
+format = "$directory$git_branch$git_status\n${custom.uptime}$time$character"
+
+[character]
+success_symbol = "[➜](bold green)"
+error_symbol = "[✗](bold red)"
+
+[git_branch]
+symbol = " "
+truncation_length = 8
+truncation_symbol = ".../"
+
+[directory]
+truncation_length = 0
+truncation_symbol = ".../"
+home_symbol = " "
+style = "green"
+format = "[$path]($style)[$read_only]($read_only_style) "
+
+[cmd_duration]
+min_time = 500
+format = "took [$duration]($style)"
+
+[time]
+disabled = false
+style = "red"
+time_format = "%H:%M"
+format = "[$time]($style) "
+
+[custom.uptime]
+when = "true"
+command = "guptime | awk '{print $3}'| sed 's/,//g'"
+style = "cyan"
+shell = "zsh"
+format = "[$output]($style) "
