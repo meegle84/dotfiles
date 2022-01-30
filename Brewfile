@@ -12,6 +12,8 @@ brew "ack"
 brew "aircrack-ng"
 # Text processing scripting language
 brew "awk"
+# Bourne-Again SHell, a UNIX command interpreter
+brew "bash"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # Fish completion for brew-cask
@@ -20,6 +22,8 @@ brew "brew-cask-completion"
 brew "brew-pip"
 # Change macOS display brightness from the command-line
 brew "brightness"
+# Manage compile and link flags for libraries
+brew "pkg-config"
 # New way to see and navigate directory trees
 brew "broot"
 # Interpreted, interactive, object-oriented programming language
@@ -30,6 +34,10 @@ brew "coreutils"
 brew "cask"
 # Like cat but displays content with syntax highlighting
 brew "ccat"
+# Formatting tools for C, C++, Obj-C, Java, JavaScript, TypeScript
+brew "clang-format"
+# Cross-platform make
+brew "cmake"
 # Console Matrix
 brew "cmatrix"
 # Color-highlighted diff(1) output
@@ -74,10 +82,16 @@ brew "fzf"
 brew "git"
 # Extensions to follow Vincent Driessen's branching model
 brew "git-flow"
-# Emoji guide for your commit messages
+# Interactive command-line tool for using emoji in commit messages
 brew "gitmoji"
+# Alternative to top/htop
+brew "glances"
+# GNU implementation of the famous stream editor
+brew "gnu-sed"
 # Image processing tools collection
 brew "graphicsmagick"
+# Command-line tool for generating regular expressions
+brew "grex"
 # ASCII-art displaying typo-corrector for commands
 brew "gti"
 # Convert source code to formatted text with syntax highlighting
@@ -92,6 +106,8 @@ brew "jq"
 brew "jupyterlab"
 # Pager program similar to more
 brew "less"
+# Next-gen compiler infrastructure
+brew "llvm"
 # Curses-based tool for viewing and analyzing log files
 brew "lnav"
 # Rainbows and unicorns in your console!
@@ -116,8 +132,14 @@ brew "neovim"
 brew "nmap"
 # Renders an animated, color, ANSI-text loop of the Poptart Cat
 brew "nyancat"
+# Cross-platform application and UI framework
+brew "qt@5", link: true
+# Open source computer vision library
+brew "opencv"
 # Development kit for the Java programming language
 brew "openjdk"
+# Outputs current CPU temperature for OSX
+brew "osx-cpu-temp"
 # 7-Zip (high compression file archiver) implementation
 brew "p7zip"
 # Command-line tool to generate, analyze, convert and manipulate colors
@@ -140,6 +162,8 @@ brew "rainbarf"
 brew "randomize-lines"
 # File browser
 brew "ranger"
+# Tool for shell commands execution, visualization and alerting
+brew "sampler"
 # SMART hard drive monitoring
 brew "smartmontools"
 # Command-line interface for https://speedtest.net bandwidth tests
@@ -158,6 +182,8 @@ brew "toilet"
 brew "trash"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
+# Python virtualenv extensions
+brew "virtualenvwrapper"
 # Generator for LS_COLORS with support for multiple color themes
 brew "vivid"
 # Add progress bars to command-line applications
@@ -166,12 +192,16 @@ brew "vramsteg"
 brew "watch"
 # Internet file retriever
 brew "wget"
+# Show the current WiFi network password
+brew "wifi-password"
 # Format XML documents
 brew "xmlformat"
 # Download YouTube videos from the command-line
 brew "youtube-dl"
 # General-purpose lossless data-compression library
 brew "zlib"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
 # UNIX shell (command interpreter)
 brew "zsh"
 # Fish-like fast/unobtrusive autosuggestions for zsh
@@ -188,7 +218,7 @@ cask "alacritty"
 cask "appcleaner"
 # Backup and restore SD cards, USB drives, external HDD, etc
 cask "applepi-baker"
-# Open-source electronics prototyping platform
+# Electronics prototyping platform
 cask "arduino"
 # Text editor
 cask "atom"
@@ -206,6 +236,8 @@ cask "cleanmymac"
 cask "clion"
 # Tool to show live information about the batteries in various devices
 cask "coconutbattery"
+# Download high quality artwork for movies, music albums, and more
+cask "coverload"
 # Tool to run Windows software
 cask "crossover"
 # Voice and text chat software
@@ -247,6 +279,8 @@ cask "itsycal"
 cask "keka"
 # Office suite
 cask "libreoffice"
+# Full TeX Live distribution with GUI applications
+cask "mactex"
 # Detailed information on every Apple product ever made
 cask "mactracker"
 # Syncs files between computers and MEGA Cloud drives
@@ -255,16 +289,24 @@ cask "megasync"
 cask "mixxx"
 # Re-mounts write-protected NTFS volumes
 cask "mounty"
+# Music tagger
+cask "musicbrainz-picard"
 # WiFi site survey software and WiFi scanner
 cask "netspot"
 # VPN client for secure internet access and private browsing
 cask "nordvpn"
+# App to write, plan, collaborate, and get organized
+cask "notion"
 # Verify system files structure, run miscellaneous maintenance and more
 cask "onyx"
 # Finder Toolbar app to open the current directory in Editor
 cask "openineditor-lite"
 # Finder Toolbar app to open the current directory in Terminal
 cask "openinterminal-lite"
+# Visual programming language for multimedia
+cask "pd"
+# Allows installation and use of software designed for Windows
+cask "playonmac"
 # IDE for professional Python development
 cask "pycharm"
 # Peer to peer Bitorrent client
@@ -275,9 +317,14 @@ cask "qlimagesize"
 cask "qlmarkdown"
 cask "qlstephen"
 cask "qlvideo"
+# IDE for application development
+cask "qt-creator"
 cask "quicknfo"
 # Move and resize windows using keyboard shortcuts or snap areas
 cask "rectangle"
+# Video chat, voice call and instant messaging application
+cask "skype"
+# File sharing network
 cask "soulseek"
 # Sound and audio controller
 cask "soundsource"
@@ -285,6 +332,7 @@ cask "soundsource"
 cask "spotify"
 # Video game digital distribution service
 cask "steam"
+# To-do list and time tracker
 cask "superproductivity"
 # Remote access and connectivity software focused on security
 cask "teamviewer"
@@ -296,10 +344,12 @@ cask "tg-pro"
 cask "tor-browser"
 # Tool to install Linux/BSD distributions to a partition or USB drive
 cask "unetbootin"
-# Free and open-source hosted hypervisor for x86 virtualization
+# Virtualizer for x86 hardware
 cask "virtualbox"
 # Multimedia player
 cask "vlc"
+# Remote desktop application focusing on security
+cask "vnc-viewer"
 # Desktop client for WhatsApp
 cask "whatsapp"
 # Network protocol analyzer
@@ -309,6 +359,5 @@ cask "xquartz"
 # Video communication and virtual meeting platform
 cask "zoom"
 mas "MindNode", id: 1289197285
-mas "Red Lines Tools", id: 1469400117
 mas "screendimmer", id: 562058942
 mas "Xcode", id: 497799835
