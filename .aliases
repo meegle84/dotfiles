@@ -29,7 +29,7 @@ alias ...='cd ../../' # two folder up
 alias grep='grep --color=auto' # colorized
 alias egrep='egrep --color=auto' # colorized
 alias fgrep='fgrep --color=auto' # colorized
-alias publicip='dig +short myip.opendns.com @resolver1.opendns.com' # public ip address
+alias publicip='curl ifconfig.co' # public ip address
 alias localip='ifconfig -l | xargs -n1 ipconfig getifaddr' # local ip address
 alias mountReadWrite='/sbin/mount -uw /'    # mountReadWrite:   For use when booted into single-user
 alias dotfiles='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
