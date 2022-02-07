@@ -70,8 +70,6 @@ brew "ffmpeg"
 brew "figlet"
 # Collection of GNU find, xargs, and locate
 brew "findutils"
-# Command-line outline and bitmap font editor/converter
-brew "fontforge"
 # Infamous electronic fortune-cookie generator
 brew "fortune"
 # Command-line JSON processing tool
@@ -86,8 +84,12 @@ brew "git-flow"
 brew "gitmoji"
 # Alternative to top/htop
 brew "glances"
+# Render markdown on the CLI
+brew "glow"
 # GNU implementation of the famous stream editor
 brew "gnu-sed"
+# Go programming environment (1.16)
+brew "go@1.16"
 # Image processing tools collection
 brew "graphicsmagick"
 # Command-line tool for generating regular expressions
@@ -116,6 +118,8 @@ brew "lolcat"
 brew "lsd"
 # List USB devices, just like the Linux lsusb command
 brew "lsusb"
+# Man-page inspired Markdown viewer
+brew "mandown"
 # Mac App Store command-line interface
 brew "mas"
 # Collection of tools that nobody wrote when UNIX was young
@@ -348,8 +352,6 @@ cask "unetbootin"
 cask "virtualbox"
 # Multimedia player
 cask "vlc"
-# Remote desktop application focusing on security
-cask "vnc-viewer"
 # Desktop client for WhatsApp
 cask "whatsapp"
 # Network protocol analyzer
