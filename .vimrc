@@ -1,4 +1,14 @@
 set nocompatible           " Vim defaults rather than vi ones. Keep at top.
+
+call plug#begin('~/.local/share/nvim/plugged')
+"  Plug 'scrooloose/nerdtree'
+"  Plug 'vim-airline/vim-airline'
+"  Plug 'tpope/vim-surround'
+"  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+"  Plug 'junegunn/fzf.vim'
+"  Plug 'haya14busa/incsearch.vim'
+call plug#end()
+
 filetype plugin indent on  " Enable filetype-specific settings.
 syntax on                  " Enable syntax highlighting.
 colorscheme delek          " Select colorscheme
@@ -19,3 +29,4 @@ set smartcase              " Disable 'ignorecase' if the term contains upper-cas
 set tabstop=4              " Size of a Tab character.
 set shiftwidth=0           " Use same value as 'tabstop'.
 set softtabstop=-1         " Use same value as 'shiftwidth'.
+"set t_ti= t_te=

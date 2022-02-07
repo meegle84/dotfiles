@@ -67,5 +67,8 @@ source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 # enable aliases suggestions
 source $(brew --prefix)/share/zsh-you-should-use/you-should-use.plugin.zsh
 
+# enable zoxide
+eval "$(zoxide init zsh)"
+
 # enable starship
 eval "$(starship init zsh)"
