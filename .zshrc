@@ -25,8 +25,8 @@ setopt HIST_IGNORE_ALL_DUPS      # Delete old recorded entry if new entry is a d
 setopt HIST_BEEP                 # Beep when accessing nonexistent history.
 
 # exports
-if [ -f $HOME/.env ]; then
-  . $HOME/.env
+if [ -f $HOME/.exports ]; then
+  . $HOME/.exports
 fi
 # alias
 if [ -f $HOME/.aliases ]; then
