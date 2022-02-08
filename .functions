@@ -1,0 +1,28 @@
+# Create a new directory and enter it
+mkd() {
+    mkdir -p "$@" && cd "$@"
+}
+
+# Print README file
+readme() {
+    for readme in {readme,README}.{md,MD,markdown,mkd,txt,TXT}; do
+        if [[ -x "$(command -v glow)" ]] && [[ -f "$readme" ]]; then
+            mdv "$readme"
+        elif [[ -f "$readme" ]]; then
+            cat "$readme"
+        fi
+    done
+}
+
+# Weather
+weather() {
+    curl -s "https://wttr.in/Barcelona?M2F&format=v2"
+}
+
+gnuuptime() {
+    if hash guptime 2>/dev/null; then
+        guptime | awk '{print $3}'| sed 's/,//g'
+    else
+        uptime | awk '{print $3}'| sed 's/,//g'
+    fi
+}

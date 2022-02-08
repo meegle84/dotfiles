@@ -32,6 +32,10 @@ fi
 if [ -f $HOME/.aliases ]; then
   . $HOME/.aliases
 fi
+# functions
+if [ -f $HOME/.functions ]; then
+  . $HOME/.functions
+fi
 # keybindings
 if [ -f $HOME/.inputrc ]; then
   . $HOME/.inputrc
