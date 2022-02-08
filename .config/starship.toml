@@ -31,7 +31,7 @@ format = "[$time]($style) "
 
 [custom.uptime]
 when = "true"
-command = "guptime | awk '{print $3}'| sed 's/,//g'"
+command = "if hash guptime 2>/dev/null; then guptime; else uptime; fi | awk '{print $3}'| sed 's/,//g'"
 style = "cyan"
 shell = "zsh"
 format = "[$output]($style) "
