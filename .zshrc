@@ -37,6 +37,10 @@ if [ -f $HOME/.inputrc ]; then
   . $HOME/.inputrc
 fi
 
+if [ -f ${HOME}/.zplug/init.zsh ]; then
+    source ${HOME}/.zplug/init.zsh
+fi
+
 # enable completions
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
@@ -51,7 +55,15 @@ fi
 zmodload zsh/complist
 
 # enabla fzf-tab
-source $HOME/.zsh/fzf-tab/fzf-tab.plugin.zsh
+zplug "Aloxaf/fzf-tab", from:github
+zplug "b4b4r07/enhancd", use:init.sh
+zplug "supercrabtree/k", from:github, as:plugin
+zplug 'wfxr/forgit', from:github, as:plugin
+
+zplug "zsh-users/zsh-completions", depth:1
+zplug "zsh-users/zsh-autosuggestions", from:github
+zplug "zsh-users/zsh-syntax-highlighting", from:github, defer:2
+zplug "zsh-users/zsh-history-substring-search", from:github, defer:3
 
 zstyle ":completion:*:git-checkout:*" sort false
 zstyle ':completion:*:descriptions' format '[%d]'
@@ -60,12 +72,16 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
 
-# enable autosuggestions
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-# enable syntax highlight
-source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# enable aliases suggestions
-source $(brew --prefix)/share/zsh-you-should-use/you-should-use.plugin.zsh
+# install plugins if there are plugins that have not been installed
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+
+# source plugins and add commands to $PATH
+zplug load
 
 # enable zoxide
 eval "$(zoxide init zsh)"
