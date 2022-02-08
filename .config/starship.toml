@@ -1,7 +1,8 @@
 # Don't print a new line at the start of the prompt
 add_newline = false
 
-format = "$directory$git_branch$git_status\n${custom.uptime}$time$character"
+format = """$username@$hostname$directory$git_branch$git_status
+${custom.uptime}$time$character"""
 
 [character]
 success_symbol = "[➜](bold green)"
@@ -28,6 +29,17 @@ disabled = false
 style = "red"
 time_format = "%H:%M"
 format = "[$time]($style) "
+
+[username]
+show_always = true
+style_user = "yellow"
+style_root = "red bold"
+
+format = "[$user]($style)"
+[hostname]
+ssh_only = false
+style = "blue"
+format = "[$hostname]($style) "
 
 [custom.uptime]
 when = "true"
