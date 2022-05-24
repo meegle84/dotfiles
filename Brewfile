@@ -1,3 +1,4 @@
+tap "beeftornado/rmtree"
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/cask-drivers"
@@ -5,21 +6,27 @@ tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 tap "homebrew/core"
 tap "homebrew/services"
+tap "jhawthorn/fzy"
 tap "koekeishiya/formulae"
+tap "mikhailai/misc"
 # Search tool like grep, but optimized for programmers
 brew "ack"
 # Next-generation aircrack with lots of new features
 brew "aircrack-ng"
+# Macro processing language
+brew "m4"
+# Automatic configure script builder
+brew "autoconf"
 # Text processing scripting language
 brew "awk"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# GNU binary tools for native development
+brew "binutils"
 # Fish completion for brew-cask
 brew "brew-cask-completion"
-# Install pip packages as homebrew formulae
-brew "brew-pip"
 # Change macOS display brightness from the command-line
 brew "brightness"
 # Manage compile and link flags for libraries
@@ -52,10 +59,14 @@ brew "curl"
 brew "dark-mode"
 # Display graphs and colors of file system space/usage
 brew "dfc"
+# File comparison utilities
+brew "diffutils"
 # Pack, ship and run any application as a lightweight container
 brew "docker"
 # Convert text between DOS, UNIX, and Mac formats
 brew "dos2unix"
+# Classic UNIX line editor
+brew "ed"
 # Emoji on the command-line :scream:
 brew "emojify"
 # Modern replacement for 'ls'
@@ -70,12 +81,16 @@ brew "ffmpeg"
 brew "figlet"
 # Collection of GNU find, xargs, and locate
 brew "findutils"
+# Fast Lexical Analyzer, generates Scanners (tokenizers)
+brew "flex"
 # Infamous electronic fortune-cookie generator
 brew "fortune"
-# Command-line JSON processing tool
+# Terminal JSON viewer
 brew "fx"
 # Command-line fuzzy finder written in Go
 brew "fzf"
+# Fast, simple fuzzy text selector with an advanced scoring algorithm
+brew "fzy"
 # Distributed revision control system
 brew "git"
 # Extensions to follow Vincent Driessen's branching model
@@ -88,8 +103,8 @@ brew "glances"
 brew "glow"
 # GNU implementation of the famous stream editor
 brew "gnu-sed"
-# Go programming environment (1.16)
-brew "go@1.16"
+# Open source programming language to build simple/reliable/efficient software
+brew "go"
 # Image processing tools collection
 brew "graphicsmagick"
 # Command-line tool for generating regular expressions
@@ -116,8 +131,6 @@ brew "lnav"
 brew "lolcat"
 # Clone of ls with colorful output, file type icons, and more
 brew "lsd"
-# List USB devices, just like the Linux lsusb command
-brew "lsusb"
 # Man-page inspired Markdown viewer
 brew "mandown"
 # Mac App Store command-line interface
@@ -156,6 +169,8 @@ brew "pidcat"
 brew "pip-completion"
 # Animated pipes terminal screensaver
 brew "pipes-sh"
+# Professional collaborative platform for embedded development
+brew "platformio"
 # Wrapper to colorize and simplify ping's output
 brew "prettyping"
 # Monitor data's progress through a pipe
@@ -174,6 +189,8 @@ brew "smartmontools"
 brew "speedtest-cli"
 # Cross-shell prompt for astronauts
 brew "starship"
+# Display images in a terminal using block graphic characters
+brew "terminalimageviewer"
 # Programmatically correct mistyped console commands
 brew "thefuck"
 # Simplified and community-driven man pages
@@ -186,6 +203,8 @@ brew "toilet"
 brew "trash"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
+# List detailed info about USB devices
+brew "usbutils"
 # Python virtualenv extensions
 brew "virtualenvwrapper"
 # Generator for LS_COLORS with support for multiple color themes
@@ -206,6 +225,8 @@ brew "youtube-dl"
 brew "zlib"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
+# Next-generation plugin manager for zsh
+brew "zplug"
 # UNIX shell (command interpreter)
 brew "zsh"
 # Fish-like fast/unobtrusive autosuggestions for zsh
@@ -216,8 +237,12 @@ brew "zsh-completions"
 brew "zsh-syntax-highlighting"
 # ZSH plugin that reminds you to use existing aliases for commands you just typed
 brew "zsh-you-should-use"
+# Professional graphic design software
+cask "affinity-designer"
 # GPU-accelerated terminal emulator
 cask "alacritty"
+# Enable Windows-like alt-tab
+cask "alt-tab"
 # Application uninstaller
 cask "appcleaner"
 # Backup and restore SD cards, USB drives, external HDD, etc
@@ -254,6 +279,10 @@ cask "etrecheckpro"
 cask "exodus"
 # Web browser
 cask "firefox"
+# Screenshot software
+cask "flameshot"
+# Flip clock screensaver
+cask "fliqlo"
 cask "font-roboto-mono-nerd-font"
 # Disk space cleaner that finds and deletes duplicated and similar files
 cask "gemini"
@@ -263,16 +292,20 @@ cask "gimp"
 cask "git-it"
 # Git client focusing on productivity
 cask "gitkraken"
-# Web browser
-cask "google-chrome"
+# Game client
+cask "gog-galaxy"
 # Virtual globe
 cask "google-earth-pro"
+# Set which graphics card to use
+cask "gswitch"
 # Open-source video transcoder
 cask "handbrake"
 # Tool to access information from available hardware sensors
 cask "hwsensors"
 # iOS device backup software and file manager
 cask "iexplorer"
+# Free and open-source media player
+cask "iina"
 # Vector graphics editor
 cask "inkscape"
 # Terminal emulator as alternative to Apple's Terminal app
@@ -283,6 +316,8 @@ cask "itsycal"
 cask "keka"
 # Office suite
 cask "libreoffice"
+# Open-source firewall to block unknown outgoing connections
+cask "lulu"
 # Full TeX Live distribution with GUI applications
 cask "mactex"
 # Detailed information on every Apple product ever made
@@ -301,6 +336,8 @@ cask "netspot"
 cask "nordvpn"
 # App to write, plan, collaborate, and get organized
 cask "notion"
+# Knowledge base that works on top of a local folder of plain text Markdown files
+cask "obsidian"
 # Verify system files structure, run miscellaneous maintenance and more
 cask "onyx"
 # Finder Toolbar app to open the current directory in Editor
@@ -326,6 +363,8 @@ cask "qt-creator"
 cask "quicknfo"
 # Move and resize windows using keyboard shortcuts or snap areas
 cask "rectangle"
+# PDF reader and note-taking application
+cask "skim"
 # Video chat, voice call and instant messaging application
 cask "skype"
 # File sharing network
@@ -350,8 +389,12 @@ cask "tor-browser"
 cask "unetbootin"
 # Virtualizer for x86 hardware
 cask "virtualbox"
+# Open-source code editor
+cask "visual-studio-code"
 # Multimedia player
 cask "vlc"
+# USB serial driver
+cask "wch-ch34x-usb-serial-driver"
 # Desktop client for WhatsApp
 cask "whatsapp"
 # Network protocol analyzer
@@ -360,6 +403,5 @@ cask "wireshark"
 cask "xquartz"
 # Video communication and virtual meeting platform
 cask "zoom"
-mas "MindNode", id: 1289197285
 mas "screendimmer", id: 562058942
 mas "Xcode", id: 497799835
