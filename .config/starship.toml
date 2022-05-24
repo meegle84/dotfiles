@@ -1,7 +1,7 @@
 # Don't print a new line at the start of the prompt
 add_newline = false
 
-format = """$username@$hostname$directory$git_branch$git_status
+format = """$username@$hostname$directory$python$git_branch$git_status
 ${custom.uptime}$time$character"""
 
 [character]
@@ -12,6 +12,8 @@ error_symbol = "[✗](bold red)"
 symbol = " "
 truncation_length = 8
 truncation_symbol = ".../"
+
+[python]
 
 [directory]
 truncation_length = 0
