@@ -18,3 +18,9 @@ readme() {
 weather() {
     curl -s "https://wttr.in/Barcelona?M2F&format=v2"
 }
+
+tmdeletelocalsnapshots() {
+    for d in $(tmutil listlocalsnapshotdates | grep "-"); do
+        sudo tmutil deletelocalsnapshots $d
+    done
+}
