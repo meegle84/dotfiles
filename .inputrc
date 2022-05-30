@@ -1,7 +1,13 @@
 # search in history UP
+# OSX
 bindkey "^[[A" history-search-backward
+# Ubuntu
+bindkey "$key[Up]" history-search-backward
 # search in history DOWN
+# OSX
 bindkey "^[[B" history-search-forward
+# Ubuntu
+bindkey "$key[Down]" history-search-backward
 
 # go to begin
 bindkey "^[[H" beginning-of-line
