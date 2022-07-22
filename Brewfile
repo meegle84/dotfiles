@@ -95,6 +95,8 @@ brew "fzy"
 brew "git"
 # Extensions to follow Vincent Driessen's branching model
 brew "git-flow"
+# Platform built on V8 to build network applications
+brew "node"
 # Interactive command-line tool for using emoji in commit messages
 brew "gitmoji"
 # Alternative to top/htop
@@ -181,6 +183,8 @@ brew "rainbarf"
 brew "randomize-lines"
 # File browser
 brew "ranger"
+# Safe, concurrent, practical language
+brew "rust"
 # Tool for shell commands execution, visualization and alerting
 brew "sampler"
 # SMART hard drive monitoring
@@ -191,6 +195,8 @@ brew "speedtest-cli"
 brew "starship"
 # Display images in a terminal using block graphic characters
 brew "terminalimageviewer"
+# CLI tool for termius.com (aka serverauditor.com)
+brew "termius"
 # Programmatically correct mistyped console commands
 brew "thefuck"
 # Simplified and community-driven man pages
@@ -241,6 +247,8 @@ brew "zsh-you-should-use"
 cask "affinity-designer"
 # GPU-accelerated terminal emulator
 cask "alacritty"
+# Application launcher and productivity software
+cask "alfred"
 # Enable Windows-like alt-tab
 cask "alt-tab"
 # Application uninstaller
@@ -346,6 +354,7 @@ cask "openineditor-lite"
 cask "openinterminal-lite"
 # Visual programming language for multimedia
 cask "pd"
+cask "pd-extended"
 # Allows installation and use of software designed for Windows
 cask "playonmac"
 # IDE for professional Python development
@@ -381,6 +390,8 @@ cask "superproductivity"
 cask "teamviewer"
 # Desktop client for Telegram messenger
 cask "telegram-desktop"
+# SSH client
+cask "termius"
 # Temperature monitoring, fan control and diagnostics
 cask "tg-pro"
 # Web browser focusing on security
