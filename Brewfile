@@ -316,8 +316,6 @@ cask "iexplorer"
 cask "iina"
 # Vector graphics editor
 cask "inkscape"
-# Terminal emulator as alternative to Apple's Terminal app
-cask "iterm2"
 # Menu bar calendar
 cask "itsycal"
 # File archiver
@@ -354,7 +352,6 @@ cask "openineditor-lite"
 cask "openinterminal-lite"
 # Visual programming language for multimedia
 cask "pd"
-cask "pd-extended"
 # Allows installation and use of software designed for Windows
 cask "playonmac"
 # IDE for professional Python development
@@ -365,7 +362,9 @@ cask "qbittorrent"
 cask "qlimagesize"
 # QuickLook generator for Markdown files
 cask "qlmarkdown"
+# QuickLook plugin for plaintext files without an extension
 cask "qlstephen"
+# QuickLook generator for video files
 cask "qlvideo"
 # IDE for application development
 cask "qt-creator"
@@ -412,6 +411,8 @@ cask "whatsapp"
 cask "wireshark"
 # Open-source version of the X.Org X Window System
 cask "xquartz"
+# Yet another monitor
+cask "yam-display"
 # Video communication and virtual meeting platform
 cask "zoom"
 mas "screendimmer", id: 562058942
