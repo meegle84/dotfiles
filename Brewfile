@@ -125,8 +125,6 @@ brew "jq"
 brew "jupyterlab"
 # Pager program similar to more
 brew "less"
-# Next-gen compiler infrastructure
-brew "llvm"
 # Curses-based tool for viewing and analyzing log files
 brew "lnav"
 # Rainbows and unicorns in your console!
