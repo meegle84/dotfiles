@@ -13,6 +13,7 @@ brew update
 brew outdated
 brew upgrade --greedy
 brew cleanup -s
+brew autoremove
 echo $fg[green] "==>" $reset_color "Updates Finished"
 
 # Creating Dump File
