@@ -1,12 +1,12 @@
 [user]
-	email = meegle84@gmail.com
+	email = 22105488+meegle84@users.noreply.github.com
 	name = meegle84
 [color]
 	ui = auto
 [merge]
 	conflictstyle = diff3
 [core]
-	editor = atom --wait
+	editor = code
 [alias]
 	co = checkout
 	br = branch
@@ -16,3 +16,8 @@
 	aa = add -A .
 	cp = cherry-pick
 	tree = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
