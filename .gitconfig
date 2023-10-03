@@ -7,6 +7,7 @@
 	conflictstyle = diff3
 [core]
 	editor = code
+	excludesfile = /Users/meegle84/.gitignore_global
 [alias]
 	co = checkout
 	br = branch
