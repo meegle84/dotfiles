@@ -18,5 +18,5 @@ echo $fg[green] "==>" $reset_color "Updates Finished"
 
 # Creating Dump File
 echo $fg[yellow] "==>" $reset_color "Running Brew Bundle Dump..."
-brew bundle dump --describe --force --file ~/Brewfile
+brew bundle dump --describe --force --file ~/.Brewfile
 echo $fg[green] "==>" $reset_color "Bundle Dump Finished"
