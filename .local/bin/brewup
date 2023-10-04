@@ -11,7 +11,10 @@ echo $fg[green] "==>" $reset_color "Brew Diagnostic Finished."
 echo $fg[yellow] "==>" $reset_color "Running Updates..."
 brew update
 brew outdated
-brew upgrade --greedy
+# now using brew cu -ay
+# brew upgrade --greedy
+brew upgrade
+brew cu -ay
 brew cleanup -s
 brew autoremove
 echo $fg[green] "==>" $reset_color "Updates Finished"
