@@ -18,7 +18,7 @@ truncation_symbol = ".../"
 [directory]
 truncation_length = 0
 truncation_symbol = ".../"
-home_symbol = " "
+home_symbol = " "
 style = "green"
 format = "[$path]($style)[$read_only]($read_only_style) "
 
