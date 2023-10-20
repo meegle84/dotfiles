@@ -1,0 +1,3 @@
+#!/bin/zsh
+# to use this install https://github.com/buo/homebrew-cask-upgrade
+brew cu -ay --include-mas
