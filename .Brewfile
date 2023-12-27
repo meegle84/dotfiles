@@ -23,6 +23,8 @@ brew "clang-format"
 brew "cmake"
 # Console Matrix
 brew "cmatrix"
+# Container runtimes on MacOS (and Linux) with minimal setup
+brew "colima"
 # Color-highlighted diff(1) output
 brew "colordiff"
 # Wrapper around make to colorize the output
@@ -35,18 +37,20 @@ brew "cowsay"
 brew "curl"
 # Control the macOS dark mode from the command-line
 brew "dark-mode"
+# GNU data recovery tool
+brew "ddrescue"
 # Display graphs and colors of file system space/usage
 brew "dfc"
 # Pack, ship and run any application as a lightweight container
 brew "docker"
+# Isolated development environments using Docker
+brew "docker-compose"
 # Convert text between DOS, UNIX, and Mac formats
 brew "dos2unix"
 # Generate documentation for several programming languages
 brew "doxygen"
 # Select default apps for documents and URL schemes on macOS
 brew "duti"
-# Modern replacement for 'ls'
-brew "exa"
 # Perl lib for reading and writing EXIF metadata
 brew "exiftool"
 # Read-only implementation of ext4 for FUSE
@@ -69,8 +73,6 @@ brew "fzy"
 brew "git"
 # Git extension for versioning large files
 brew "git-lfs"
-# Alternative to top/htop
-brew "glances"
 # Render markdown on the CLI
 brew "glow"
 # GNU implementation of the famous stream editor
@@ -87,12 +89,14 @@ brew "hstr"
 brew "htop"
 # Macro processing language
 brew "m4"
+# Tools and libraries to manipulate images in many formats
+brew "imagemagick"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
-# Interactive environments for writing and running code
-brew "jupyterlab"
 # Pager program similar to more
 brew "less"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.12"
 # Curses-based tool for viewing and analyzing log files
 brew "lnav"
 # Rainbows and unicorns in your console!
@@ -137,22 +141,16 @@ brew "prettyping"
 brew "pv"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.10"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.9"
 # Safe, concurrent, practical language
 brew "rust"
 # SMART hard drive monitoring
 brew "smartmontools"
-# Command-line interface for https://speedtest.net bandwidth tests
-brew "speedtest-cli"
 # Cross-shell prompt for astronauts
 brew "starship"
 # Display images in a terminal using block graphic characters
 brew "terminalimageviewer"
-# CLI tool for termius.com (aka serverauditor.com)
-brew "termius"
-# Programmatically correct mistyped console commands
-brew "thefuck"
+# Powerful free data recovery utility
+brew "testdisk"
 # Simplified and community-driven man pages
 brew "tldr"
 # Terminal multiplexer
@@ -173,8 +171,6 @@ brew "vivid"
 brew "wget"
 # Show the current WiFi network password
 brew "wifi-password"
-# Download YouTube videos from the command-line
-brew "youtube-dl"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 # Next-generation plugin manager for zsh
@@ -222,6 +218,8 @@ cask "crossover"
 cask "deadbeef-nightly"
 # Voice and text chat software
 cask "discord"
+# Data recovery software
+cask "disk-drill"
 # Tool to hide status bar icons
 cask "dozer"
 # Utility to finds and fix problems on computer systems
@@ -331,7 +329,7 @@ cask "xquartz"
 # Yet another monitor
 cask "yam-display"
 mas "Amphetamine", id: 937984704
-cask "zoom"
+mas "FLIX IPTV", id: 1524212825
 mas "QuickShade", id: 931571202
 mas "screendimmer", id: 562058942
 vscode "mhutchie.git-graph"
