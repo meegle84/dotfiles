@@ -1,25 +1,33 @@
 #!/bin/zsh
+
+# use colors
 autoload -U colors
 colors
+
 # Brew Diagnostic
 echo $fg[yellow] "==>" $reset_color "Running Brew Diagnostic..."
+# check if there are issues
 brew doctor
+# check missing dependencies
 brew missing
 echo $fg[green] "==>" $reset_color "Brew Diagnostic Finished."
 
 # Brew packages update and cleanup
 echo $fg[yellow] "==>" $reset_color "Running Updates..."
+# check for updates
 brew update
+# check outdated packages
 brew outdated
-# now using brew cu -ay
-# brew upgrade --greedy
-brew upgrade
-brew cu -ay
+# upgrade packages
+brew upgrade # brew upgrade --greedy (to include cask)(now using ~./local/bin/caskup)
+# clean old downloaded packages
 brew cleanup -s
+# clean dependencies
 brew autoremove
 echo $fg[green] "==>" $reset_color "Updates Finished"
 
 # Creating Dump File
 echo $fg[yellow] "==>" $reset_color "Running Brew Bundle Dump..."
+# create a dump of installed apps with brew + mas + vscode (extensions)
 brew bundle dump --describe --force --file ~/.Brewfile
 echo $fg[green] "==>" $reset_color "Bundle Dump Finished"
