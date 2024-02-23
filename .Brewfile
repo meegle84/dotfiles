@@ -1,8 +1,10 @@
 tap "beeftornado/rmtree"
 tap "buo/cask-upgrade"
 tap "homebrew/bundle"
+tap "homebrew/cask"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
+tap "homebrew/core"
 tap "homebrew/services"
 tap "jhawthorn/fzy"
 tap "koekeishiya/formulae"
@@ -115,8 +117,12 @@ brew "most"
 brew "navi"
 # Fast, highly customisable system info script
 brew "neofetch"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
 # Port scanning utility for large networks
 brew "nmap"
+# Platform built on V8 to build network applications
+brew "node"
 # Renders an animated, color, ANSI-text loop of the Poptart Cat
 brew "nyancat"
 # Protocol buffers (Google's data interchange format)
@@ -139,12 +145,14 @@ brew "pipes-sh"
 brew "prettyping"
 # Monitor data's progress through a pipe
 brew "pv"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.10"
 # Safe, concurrent, practical language
 brew "rust"
 # SMART hard drive monitoring
 brew "smartmontools"
+# Command-line interface for https://speedtest.net bandwidth tests
+brew "speedtest-cli"
+# Spoof your MAC address in macOS
+brew "spoof-mac"
 # Cross-shell prompt for astronauts
 brew "starship"
 # Display images in a terminal using block graphic characters
@@ -171,6 +179,8 @@ brew "vivid"
 brew "wget"
 # Show the current WiFi network password
 brew "wifi-password"
+# Tools for the WireGuard secure network tunnel
+brew "wireguard-tools"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 # Next-generation plugin manager for zsh
@@ -198,16 +208,14 @@ cask "alt-tab"
 cask "appcleaner"
 # Backup and restore SD cards, USB drives, external HDD, etc
 cask "applepi-baker"
-# Electronics prototyping platform
-cask "arduino"
-# Text editor
-cask "atom"
 # Tool to flash OS images to SD cards & USB drives
 cask "balenaetcher"
 # Web browser focusing on privacy
 cask "brave-browser"
 # Tool to list all active shortcuts of the current application
 cask "cheatsheet"
+# Tool to remove unnecessary files and folders from disk
+cask "cleanmymac"
 # Tool to show live information about the batteries in various devices
 cask "coconutbattery"
 # Download high quality artwork for movies, music albums, and more
@@ -220,8 +228,6 @@ cask "deadbeef-nightly"
 cask "discord"
 # Data recovery software
 cask "disk-drill"
-# Tool to hide status bar icons
-cask "dozer"
 # Utility to finds and fix problems on computer systems
 cask "etrecheckpro"
 # Desktop wallet for cryptocurrency assets
@@ -242,16 +248,16 @@ cask "gitkraken"
 cask "gswitch"
 # Open-source video transcoder
 cask "handbrake"
-# Tool to access information from available hardware sensors
-cask "hwsensors"
 # iOS device backup software and file manager
 cask "iexplorer"
 # Menu bar calendar
 cask "itsycal"
-# Keyboard customizer
+# Keyboard customiser
 cask "karabiner-elements"
 # File archiver
 cask "keka"
+# Discover, download, and run local LLMs
+cask "lm-studio"
 # Open-source firewall to block unknown outgoing connections
 cask "lulu"
 # File system integration
@@ -268,10 +274,14 @@ cask "mounty"
 cask "musicbrainz-picard"
 # WiFi site survey software and WiFi scanner
 cask "netspot"
+# Keeps current IP address in sync
+cask "no-ip-duc"
 # VPN client for secure internet access and private browsing
 cask "nordvpn"
-# App to write, plan, collaborate, and get organized
+# App to write, plan, collaborate, and get organised
 cask "notion"
+# Calendar for professionals and teams
+cask "notion-calendar"
 # Verify system files structure, run miscellaneous maintenance and more
 cask "onyx"
 # Finder Toolbar app to open the current directory in Terminal
@@ -286,14 +296,16 @@ cask "prefs-editor"
 cask "qbittorrent"
 # Display image info and preview unsupported formats in QuickLook
 cask "qlimagesize"
-# QuickLook generator for Markdown files
+# Quick Look generator for Markdown files
 cask "qlmarkdown"
-# QuickLook plugin for plaintext files without an extension
+# Quick Look plugin for plaintext files without an extension
 cask "qlstephen"
 # Thumbnails, static previews, cover art and metadata for video files
 cask "qlvideo"
 # IDE for application development
 cask "qt-creator"
+# Imaging utility to install operating systems to a microSD card
+cask "raspberry-pi-imager"
 # Move and resize windows using keyboard shortcuts or snap areas
 cask "rectangle"
 # File sharing network
@@ -318,11 +330,13 @@ cask "unetbootin"
 cask "visual-studio-code"
 # Multimedia player
 cask "vlc"
+# Remote desktop application focusing on security
+cask "vnc-viewer"
 # Native desktop client for WhatsApp
 cask "whatsapp"
 # Network protocol analyzer
 cask "wireshark"
-# Photo viewer, image manager, image resizer and more
+# Photo viewer, image manager, image resiser and more
 cask "xnviewmp"
 # Open-source version of the X.Org X Window System
 cask "xquartz"
@@ -332,9 +346,13 @@ mas "Amphetamine", id: 937984704
 mas "FLIX IPTV", id: 1524212825
 mas "QuickShade", id: 931571202
 mas "screendimmer", id: 562058942
+mas "WireGuard", id: 1451685025
+vscode "bracketpaircolordlw.bracket-pair-color-dlw"
 vscode "mhutchie.git-graph"
 vscode "ms-vscode.cmake-tools"
 vscode "ms-vscode.cpptools"
 vscode "ms-vscode.cpptools-extension-pack"
 vscode "ms-vscode.cpptools-themes"
+vscode "tonka3000.qtvsctools"
 vscode "twxs.cmake"
+vscode "zachflower.uncrustify"
