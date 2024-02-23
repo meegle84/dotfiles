@@ -7,6 +7,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 "  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 "  Plug 'junegunn/fzf.vim'
 "  Plug 'haya14busa/incsearch.vim'
+"  Plug 'github/copilot.vim'
 call plug#end()
 
 filetype plugin indent on  " Enable filetype-specific settings.
