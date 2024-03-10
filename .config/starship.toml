@@ -1,6 +1,8 @@
+# https://starship.rs/config/#prompt
 # Don't print a new line at the start of the prompt
 add_newline = false
 
+# PS1
 format = """$username@$hostname$directory$python$git_branch$git_status
 ${custom.uptime}$time$character"""
 
