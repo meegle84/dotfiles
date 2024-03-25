@@ -3,6 +3,7 @@
 bindkey "^[[A" history-search-backward
 # Ubuntu
 bindkey "$key[Up]" history-search-backward
+
 # search in history DOWN
 # OSX
 bindkey "^[[B" history-search-forward

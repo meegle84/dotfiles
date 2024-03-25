@@ -60,7 +60,6 @@ zmodload zsh/complist
 
 # enabla fzf-tab
 zplug "Aloxaf/fzf-tab", from:github
-zplug "b4b4r07/enhancd", use:init.sh
 zplug "supercrabtree/k", from:github, as:plugin
 zplug 'wfxr/forgit', from:github, as:plugin
 
@@ -87,8 +86,6 @@ fi
 # source plugins and add commands to $PATH
 zplug load
 
-# enable zoxide
-eval "$(zoxide init zsh)"
-
 # enable starship
+# https://github.com/starship/starship
 eval "$(starship init zsh)"
