@@ -4,11 +4,11 @@ colors
 
 # OSX Updates
 echo $fg[yellow] "==>" $reset_color "Finding OSX Updates..."
-softwareupdate -l
+softwareupdate -lr # list + recomendended
 echo $fg[green] "==>" $reset_color "Finding OSX Updates Finished."
 
 echo $fg[yellow] "==>" $reset_color "Installing OSX Updates..."
-softwareupdate -i -a
+softwareupdate -ir # install + recomended
 echo $fg[green] "==>" $reset_color "Installing OSX Updates Finished."
 
 # AppStore Updates
