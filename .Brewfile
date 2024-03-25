@@ -189,8 +189,6 @@ brew "wget"
 brew "wifi-password"
 # Tools for the WireGuard secure network tunnel
 brew "wireguard-tools"
-# Shell extension to navigate your filesystem faster
-brew "zoxide"
 # Next-generation plugin manager for zsh
 brew "zplug"
 # UNIX shell (command interpreter)
