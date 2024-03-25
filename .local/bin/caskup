@@ -1,3 +1,14 @@
 #!/bin/zsh
+
+# use colors
+autoload -U colors
+colors
+
 # to use this install https://github.com/buo/homebrew-cask-upgrade
 brew cu -ay --include-mas
+
+# Creating Dump File
+echo $fg[yellow] "==>" $reset_color "Running Brew Bundle Dump..."
+# create a dump of installed apps with brew + mas + vscode (extensions)
+brew bundle dump --describe --force --file ~/.Brewfile
+echo $fg[green] "==>" $reset_color "Bundle Dump Finished"
