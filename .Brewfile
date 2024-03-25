@@ -1,10 +1,8 @@
 tap "beeftornado/rmtree"
 tap "buo/cask-upgrade"
 tap "homebrew/bundle"
-tap "homebrew/cask"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
-tap "homebrew/core"
 tap "homebrew/services"
 tap "jhawthorn/fzy"
 tap "koekeishiya/formulae"
@@ -17,6 +15,8 @@ brew "bat"
 brew "binutils"
 # Fish completion for brew-cask
 brew "brew-cask-completion"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.12"
 # Like cat but displays content with syntax highlighting
 brew "ccat"
 # Formatting tools for C, C++, Obj-C, Java, JavaScript, TypeScript
@@ -79,10 +79,16 @@ brew "git-lfs"
 brew "glow"
 # GNU implementation of the famous stream editor
 brew "gnu-sed"
+# Open source programming language to build simple/reliable/efficient software
+brew "go"
 # Command-line tool for generating regular expressions
 brew "grex"
 # ASCII-art displaying typo-corrector for commands
 brew "gti"
+# World's fastest and most advanced password recovery utility
+brew "hashcat"
+# Utils for conversion of cap/pcap/pcapng WiFi dump files
+brew "hcxtools"
 # Convert source code to formatted text with syntax highlighting
 brew "highlight"
 # Bash and zsh history suggest box
@@ -97,8 +103,8 @@ brew "imagemagick"
 brew "jq"
 # Pager program similar to more
 brew "less"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.12"
+# Portable library for network traffic capture
+brew "libpcap"
 # Curses-based tool for viewing and analyzing log files
 brew "lnav"
 # Rainbows and unicorns in your console!
@@ -155,6 +161,8 @@ brew "speedtest-cli"
 brew "spoof-mac"
 # Cross-shell prompt for astronauts
 brew "starship"
+# User interface to the TELNET protocol
+brew "telnet"
 # Display images in a terminal using block graphic characters
 brew "terminalimageviewer"
 # Powerful free data recovery utility
@@ -197,7 +205,7 @@ brew "zsh-syntax-highlighting"
 brew "zsh-you-should-use"
 brew "beeftornado/rmtree/brew-rmtree"
 # Professional graphic design software
-cask "affinity-designer"
+cask "affinity-designer1"
 # GPU-accelerated terminal emulator
 cask "alacritty"
 # Application launcher and productivity software
@@ -208,8 +216,12 @@ cask "alt-tab"
 cask "appcleaner"
 # Backup and restore SD cards, USB drives, external HDD, etc
 cask "applepi-baker"
+# Chromium based browser
+cask "arc"
 # Tool to flash OS images to SD cards & USB drives
 cask "balenaetcher"
+# Display management tool
+cask "betterdisplay"
 # Web browser focusing on privacy
 cask "brave-browser"
 # Tool to list all active shortcuts of the current application
@@ -228,6 +240,8 @@ cask "deadbeef-nightly"
 cask "discord"
 # Data recovery software
 cask "disk-drill"
+# Developer platform
+cask "dotnet-sdk"
 # Utility to finds and fix problems on computer systems
 cask "etrecheckpro"
 # Desktop wallet for cryptocurrency assets
@@ -244,6 +258,10 @@ cask "gemini"
 cask "github"
 # Git client focusing on productivity
 cask "gitkraken"
+# Game development engine
+cask "godot"
+# C# scripting capable version of Godot game engine
+cask "godot-mono"
 # Set which graphics card to use
 cask "gswitch"
 # Open-source video transcoder
@@ -288,8 +306,6 @@ cask "onyx"
 cask "openinterminal-lite"
 # Visual programming language for multimedia
 cask "pd"
-# Allows installation and use of software designed for Windows
-cask "playonmac"
 # Graphical user interface for the 'defaults' command
 cask "prefs-editor"
 # Peer to peer Bitorrent client
@@ -312,6 +328,8 @@ cask "rectangle"
 cask "soulseek"
 # Sound and audio controller
 cask "soundsource"
+# System monitor for the menu bar
+cask "stats"
 # Video game digital distribution service
 cask "steam"
 # Remote access and connectivity software focused on security
@@ -326,6 +344,8 @@ cask "tg-pro"
 cask "tor-browser"
 # Tool to install Linux/BSD distributions to a partition or USB drive
 cask "unetbootin"
+# Virtual machines UI using QEMU
+cask "utm"
 # Open-source code editor
 cask "visual-studio-code"
 # Multimedia player
@@ -347,12 +367,20 @@ mas "FLIX IPTV", id: 1524212825
 mas "QuickShade", id: 931571202
 mas "screendimmer", id: 562058942
 mas "WireGuard", id: 1451685025
+vscode "bmalehorn.shell-syntax"
 vscode "bracketpaircolordlw.bracket-pair-color-dlw"
+vscode "foxundermoon.shell-format"
+vscode "golang.go"
 vscode "mhutchie.git-graph"
+vscode "mondersky.tabscolor"
+vscode "ms-python.debugpy"
+vscode "ms-python.python"
+vscode "ms-python.vscode-pylance"
 vscode "ms-vscode.cmake-tools"
 vscode "ms-vscode.cpptools"
 vscode "ms-vscode.cpptools-extension-pack"
 vscode "ms-vscode.cpptools-themes"
+vscode "orepor.color-tabs-vscode-ext"
 vscode "tonka3000.qtvsctools"
 vscode "twxs.cmake"
 vscode "zachflower.uncrustify"
