@@ -58,7 +58,7 @@ if type brew &>/dev/null; then
 fi
 zmodload zsh/complist
 
-# enabla fzf-tab
+# enable fzf-tab
 zplug "Aloxaf/fzf-tab", from:github
 zplug "supercrabtree/k", from:github, as:plugin
 zplug 'wfxr/forgit', from:github, as:plugin
@@ -73,7 +73,10 @@ zstyle ':completion:*:descriptions' format '[%d]'
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 # Auto complete with case insenstivity
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+# tab cambletion shows folder contents
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -1 --color=always $realpath'
+# activate menu selection
+zstyle ':completion:*' menu select
 
 # install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
