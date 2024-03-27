@@ -33,7 +33,7 @@ alias publicip='curl ifconfig.co' # public ip address
 alias localip='ifconfig -l | xargs -n1 ipconfig getifaddr' # local ip address
 alias mountReadWrite='/sbin/mount -uw /'    # mountReadWrite:   For use when booted into single-user
 #alias dotfiles='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
-alias removeDS="sudo find . -name '.DS_Store' -depth -exec rm -f {} \;"
+alias removeDS="find . -name '.DS_Store' -depth -exec rm -f {} \;"
 alias cleanLaunchServices="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
 alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
 alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
