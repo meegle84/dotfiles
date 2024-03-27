@@ -151,6 +151,8 @@ brew "pipes-sh"
 brew "prettyping"
 # Monitor data's progress through a pipe
 brew "pv"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.10"
 # Safe, concurrent, practical language
 brew "rust"
 # SMART hard drive monitoring
