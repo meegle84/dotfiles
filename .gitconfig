@@ -10,12 +10,17 @@
 	excludesfile = /Users/meegle84/.gitignore_global
 [alias]
 	co = checkout
+	cob = checkout -b
 	br = branch
-	cm = commit
+	ci = commit
+	cim = commit -m
 	st = status
 	po = push origin
 	aa = add -A .
 	cp = cherry-pick
+	rb = rebase
+	rlog = reflog
+	rs = reset
 	tree = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
 [filter "lfs"]
 	clean = git-lfs clean -- %f
