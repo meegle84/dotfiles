@@ -40,9 +40,13 @@ fi
 if [ -f $HOME/.inputrc ]; then
   . $HOME/.inputrc
 fi
-
+# zplug
 if [ -f ${HOME}/.zplug/init.zsh ]; then
-    source ${HOME}/.zplug/init.zsh
+  source ${HOME}/.zplug/init.zsh
+fi
+# alias checker
+if [ -f ${HOMEBREW_PREFIX}/share/zsh-you-should-use/you-should-use.plugin.zsh ]; then
+  source ${HOMEBREW_PREFIX}/share/zsh-you-should-use/you-should-use.plugin.zsh
 fi
 
 # enable completions
