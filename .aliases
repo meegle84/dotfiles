@@ -1,38 +1,81 @@
+# sudo 
 alias sudo='sudo ' # expand completion for sudo
+# enviroment
+alias reload='exec $SHELL -l'
+# dotfiles
+#alias dotfiles='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
+# editor
 type nvim > /dev/null 2>&1 && alias vim='nvim' # neovim instead of vim
 alias v='vim' # edit command
+# list
 type lsd > /dev/null 2>&1 && alias ls='lsd -h --group-dirs first' # lsd intedad of ls, readable, dirs first
 alias dir='ls' # oldschool DOS
 alias ll='ls -l' # long list
 alias la='ls -A' # show hidden also
 alias lla='ls -lA' # show hidden also, long list
 alias l.='lsd -a | egrep "^\."' # show only hidden
+# print
 type ccat > /dev/null 2>&1 && alias cat='ccat' # colorized cat
-alias mv='mv -iv' # ask before move
-alias rm='rm -iv' # ask before remove
-alias cp='cp -iv' # ask before copy
-alias clr='clear' # clear abreviation
-type dfc > /dev/null 2>&1 && alias df='dfc ' # colorized
-alias du='du -ch' # readable size
-alias wget='wget -c' # continue partially-downloaded file
-alias pping='prettyping' # ping colorized
-alias mkdir='mkdir -pv' # create parents and vervose
 type ccat > /dev/null 2>&1 && alias less='less -R $1 | ccat' # less colorized
 alias diff='colordiff ' # diff colorized
+# file managment
+alias mv='mv -iv' # ask before move
+alias rm='rm -iv' # ask before remove
+alias rmr='rm -rv' # ask before remove
+alias cp='cp -iv' # recursive copy
+alias cpr='cp -rv' # recursive copy
+alias mkdir='mkdir -pv' # create parents and vervose
+# clear
+alias clr='clear' # clear abreviation
+# kill
+alias k9='kill -9'
+# size
+type dfc > /dev/null 2>&1 && alias df='dfc ' # colorized
+alias du='du -ch' # readable size
+# network
+alias wget='wget -c' # continue partially-downloaded file
+alias pping='prettyping' # ping colorized
+alias publicip='curl ifconfig.co' # public ip address
+alias localip='ifconfig -l | xargs -n1 ipconfig getifaddr' # local ip address
+# folder jump
 alias ~="cd ~" # ~ home
 alias home='cd ~' # ~ home
-alias whoamic='figlet -f $(ls $(brew --prefix figlet)/share/figlet/fonts/ | grep ".flf" | shuf -n 1) $(whoami) | lolcat' # random font lolcat colored ascii whoami
 alias -- -='cd -' # - to go back to previous directory
 alias cd..='cd ../' # one folder up
 alias ..='cd ../' # one folder up
 alias ...='cd ../../' # two folder up
+# whoami
+alias whoamic='figlet -f $(find $(brew --prefix figlet)/share/figlet/fonts/ -type f -name "*.flf" | xargs -n 1 | shuf -n1) $(whoami) | lolcat' # random font lolcat colored ascii whoami
+# grep
 alias grep='grep --color=auto' # colorized
 alias egrep='egrep --color=auto' # colorized
 alias fgrep='fgrep --color=auto' # colorized
-alias publicip='curl ifconfig.co' # public ip address
-alias localip='ifconfig -l | xargs -n1 ipconfig getifaddr' # local ip address
-alias mountReadWrite='/sbin/mount -uw /'    # mountReadWrite:   For use when booted into single-user
-#alias dotfiles='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
+# tail
+alias t='tail -f'
+# :)
+alias men="man man"
+# pipes
+alias CA='2>&1 | cat -A'
+alias G='| grep'
+alias H='| head'
+alias L='| less'
+alias LL='2>&1 | less'
+alias M='| most'
+alias NE='2> /dev/null'
+alias NUL='> /dev/null 2>&1'
+alias P='2>&1| pygmentize -l pytb'
+alias T='| tail'
+# brew
+alias bs='brew search'
+alias bi='brew install'
+alias bn='brew info'
+alias bl='brew list'
+alias br='brew remove'
+alias bd='brew doctor'
+alias bu='brew update'
+alias bp='brew upgrade'
+# osx utils
+alias mountReadWrite='/sbin/mount -uw /' # For use when booted into single-user
 alias removeDS="find . -name '.DS_Store' -depth -exec rm -f {} \;"
 alias cleanLaunchServices="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
 alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
