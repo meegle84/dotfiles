@@ -4,6 +4,8 @@ alias sudo='sudo ' # expand completion for sudo
 alias reload='exec $SHELL -l'
 # dotfiles
 #alias dotfiles='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
+# alias
+alias aliasc='alias | cat' # alias colorized
 # editor
 type nvim > /dev/null 2>&1 && alias vim='nvim' # neovim instead of vim
 alias v='vim' # edit command
