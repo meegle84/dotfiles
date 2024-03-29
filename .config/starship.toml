@@ -1,10 +1,23 @@
 # https://starship.rs/config/#prompt
+
+# Sets user-defined palette
+palette = "mypalette"
+
 # Don't print a new line at the start of the prompt
 add_newline = false
 
 # PS1
-format = """$username@$hostname$directory$python$git_branch$git_status
-${custom.uptime}$time$character"""
+format = """
+$username\
+@\
+$hostname\
+$directory\
+$python\
+$git_branch\
+$git_status\
+\n${custom.uptime}\
+$time$character\
+"""
 
 [character]
 success_symbol = "[➜](bold green)"
@@ -20,7 +33,7 @@ truncation_symbol = ".../"
 [directory]
 truncation_length = 0
 truncation_symbol = ".../"
-home_symbol = " "
+home_symbol = ""
 style = "green"
 format = "[$path]($style)[$read_only]($read_only_style) "
 
@@ -30,7 +43,7 @@ format = "took [$duration]($style)"
 
 [time]
 disabled = false
-style = "red"
+style = "orange"
 time_format = "%H:%M"
 format = "[$time]($style) "
 
@@ -38,16 +51,24 @@ format = "[$time]($style) "
 show_always = true
 style_user = "yellow"
 style_root = "red bold"
-
 format = "[$user]($style)"
+
 [hostname]
 ssh_only = false
 style = "blue"
 format = "[$hostname]($style) "
 
+# https://starship.rs/config/#options-91
 [custom.uptime]
+description = 'uptime'
 when = "true"
 command = "if hash guptime 2>/dev/null; then guptime; else uptime; fi | awk '{print $3}'| sed 's/,//g'"
 style = "cyan"
 shell = "zsh"
 format = "[$output]($style) "
+
+# custom colors 
+# https://github.com/fidian/ansi
+# https://www.ditig.com/publications/256-colors-cheat-sheet
+[palettes.mypalette]
+orange = "208"
