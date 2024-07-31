@@ -1,8 +1,8 @@
 tap "beeftornado/rmtree"
 tap "buo/cask-upgrade"
+tap "evanwieland/brute"
+tap "gromgit/fuse"
 tap "homebrew/bundle"
-tap "homebrew/cask-fonts"
-tap "homebrew/cask-versions"
 tap "homebrew/services"
 tap "jhawthorn/fzy"
 tap "koekeishiya/formulae"
@@ -71,6 +71,8 @@ brew "fortune"
 brew "fzf"
 # Fast, simple fuzzy text selector with an advanced scoring algorithm
 brew "fzy"
+# GitHub command-line tool
+brew "gh"
 # Distributed revision control system
 brew "git"
 # Git extension for versioning large files
@@ -99,6 +101,8 @@ brew "htop"
 brew "m4"
 # Tools and libraries to manipulate images in many formats
 brew "imagemagick"
+# Featureful UNIX password cracker
+brew "john"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
 # Pager program similar to more
@@ -151,6 +155,8 @@ brew "pipes-sh"
 brew "prettyping"
 # Monitor data's progress through a pipe
 brew "pv"
+# Python interface to Tcl/Tk
+brew "python-tk@3.12"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.10"
 # Safe, concurrent, practical language
@@ -191,6 +197,10 @@ brew "wget"
 brew "wifi-password"
 # Tools for the WireGuard secure network tunnel
 brew "wireguard-tools"
+# JavaScript package manager
+brew "yarn"
+# Feature-rich command-line audio/video downloader
+brew "yt-dlp"
 # Next-generation plugin manager for zsh
 brew "zplug"
 # UNIX shell (command interpreter)
@@ -204,14 +214,22 @@ brew "zsh-syntax-highlighting"
 # ZSH plugin that reminds you to use existing aliases for commands you just typed
 brew "zsh-you-should-use"
 brew "beeftornado/rmtree/brew-rmtree"
+# Read-write NTFS driver for FUSE
+brew "gromgit/fuse/ntfs-3g-mac"
 # Professional graphic design software
-cask "affinity-designer1"
+cask "affinity-designer"
+# Professional image editing software
+cask "affinity-photo"
+# Professional desktop publishing software
+cask "affinity-publisher"
 # GPU-accelerated terminal emulator
 cask "alacritty"
 # Application launcher and productivity software
 cask "alfred"
 # Enable Windows-like alt-tab
 cask "alt-tab"
+# Transfer files from and to an Android smartphone
+cask "android-file-transfer"
 # Application uninstaller
 cask "appcleaner"
 # Backup and restore SD cards, USB drives, external HDD, etc
@@ -226,6 +244,8 @@ cask "betterdisplay"
 cask "brave-browser"
 # Tool to list all active shortcuts of the current application
 cask "cheatsheet"
+# Remotely access another computer through the Google Chrome browser
+cask "chrome-remote-desktop-host"
 # Tool to remove unnecessary files and folders from disk
 cask "cleanmymac"
 # Tool to show live information about the batteries in various devices
@@ -246,11 +266,12 @@ cask "dotnet-sdk"
 cask "etrecheckpro"
 # Desktop wallet for cryptocurrency assets
 cask "exodus"
+# Web browser
+cask "firefox"
 # Screenshot software
 cask "flameshot"
 # Flip clock screensaver
 cask "fliqlo"
-# Developer targeted fonts with a high number of glyphs
 cask "font-roboto-mono-nerd-font"
 # Disk space cleaner that finds and deletes duplicated and similar files
 cask "gemini"
@@ -262,14 +283,20 @@ cask "gitkraken"
 cask "godot"
 # C# scripting capable version of Godot game engine
 cask "godot-mono"
+# Game client
+cask "gog-galaxy"
 # Set which graphics card to use
 cask "gswitch"
 # Open-source video transcoder
 cask "handbrake"
 # iOS device backup software and file manager
 cask "iexplorer"
+# Vector graphics editor
+cask "inkscape"
 # Menu bar calendar
 cask "itsycal"
+# Download manager
+cask "jdownloader"
 # Keyboard customiser
 cask "karabiner-elements"
 # File archiver
@@ -332,8 +359,6 @@ cask "soundsource"
 cask "stats"
 # Video game digital distribution service
 cask "steam"
-# Remote access and connectivity software focused on security
-cask "teamviewer"
 # Desktop client for Telegram messenger
 cask "telegram-desktop"
 # SSH client
