@@ -32,4 +32,5 @@ export PATH=$(tr -d $'\n ' <<< "
              /usr/local/sbin:
              /usr/local/opt/gnu-sed/libexec/gnubin:
              /usr/local/opt/openjdk/bin:
+             /opt/homebrew/opt/dotnet@8/bin:
              $PATH")
