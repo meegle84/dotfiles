@@ -66,6 +66,8 @@ brew "duti"
 brew "exiftool"
 # Read-only implementation of ext4 for FUSE
 brew "ext4fuse"
+# Like neofetch, but much faster because written mostly in C
+brew "fastfetch"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
 # Play, record, convert, and stream audio and video
@@ -134,8 +136,6 @@ brew "moreutils"
 brew "most"
 # Interactive cheatsheet tool for the command-line
 brew "navi"
-# Fast, highly customisable system info script
-brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # Port scanning utility for large networks
