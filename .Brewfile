@@ -6,19 +6,26 @@ tap "homebrew/bundle"
 tap "homebrew/services"
 tap "jhawthorn/fzy"
 tap "koekeishiya/formulae"
-tap "mikhailai/misc"
+# Macro processing language
+brew "m4"
 # Text processing scripting language
 brew "awk"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # GNU binary tools for native development
 brew "binutils"
+# C/C++ and Java libraries for Unicode and globalization
+brew "icu4c@76"
 # Fish completion for brew-cask
 brew "brew-cask-completion"
+# Library for command-line editing
+brew "readline"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.12"
 # Like cat but displays content with syntax highlighting
 brew "ccat"
+# Package compiler and linker metadata toolkit
+brew "pkgconf"
 # Formatting tools for C, C++, Obj-C, Java, JavaScript, TypeScript
 brew "clang-format"
 # Cross-platform make
@@ -33,7 +40,7 @@ brew "colordiff"
 brew "colormake"
 # GNU File, Shell, and Text utilities
 brew "coreutils"
-# Configurable talking characters in ASCII art
+# Apjanke's fork of the classic cowsay project
 brew "cowsay"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
@@ -49,6 +56,8 @@ brew "docker"
 brew "docker-compose"
 # Convert text between DOS, UNIX, and Mac formats
 brew "dos2unix"
+# .NET Core
+brew "dotnet@8"
 # Generate documentation for several programming languages
 brew "doxygen"
 # Select default apps for documents and URL schemes on macOS
@@ -95,10 +104,10 @@ brew "hcxtools"
 brew "highlight"
 # Bash and zsh history suggest box
 brew "hstr"
+# Text-based UI library
+brew "ncurses"
 # Improved top (interactive process viewer)
 brew "htop"
-# Macro processing language
-brew "m4"
 # Tools and libraries to manipulate images in many formats
 brew "imagemagick"
 # Featureful UNIX password cracker
@@ -155,6 +164,12 @@ brew "pipes-sh"
 brew "prettyping"
 # Monitor data's progress through a pipe
 brew "pv"
+# Python version management
+brew "pyenv"
+# Python interface to Tcl/Tk
+brew "python-tk@3.11"
+# Tool Command Language
+brew "tcl-tk"
 # Python interface to Tcl/Tk
 brew "python-tk@3.12"
 # Interpreted, interactive, object-oriented programming language
@@ -182,11 +197,9 @@ brew "tmux"
 # Color-based alternative to figlet (uses libcaca)
 brew "toilet"
 # CLI tool that moves files or folder to the trash
-brew "trash"
+brew "trash", link: true
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
-# List detailed info about USB devices
-brew "usbutils"
 # Vi 'workalike' with many additional features
 brew "vim"
 # Generator for LS_COLORS with support for multiple color themes
@@ -201,6 +214,8 @@ brew "wireguard-tools"
 brew "yarn"
 # Feature-rich command-line audio/video downloader
 brew "yt-dlp"
+# General-purpose lossless data-compression library
+brew "zlib"
 # Next-generation plugin manager for zsh
 brew "zplug"
 # UNIX shell (command interpreter)
@@ -240,8 +255,12 @@ cask "arc"
 cask "balenaetcher"
 # Display management tool
 cask "betterdisplay"
+# Utility to create and modify archives
+cask "betterzip"
 # Web browser focusing on privacy
 cask "brave-browser"
+# E-books management software
+cask "calibre"
 # Tool to list all active shortcuts of the current application
 cask "cheatsheet"
 # Remotely access another computer through the Google Chrome browser
@@ -262,6 +281,8 @@ cask "discord"
 cask "disk-drill"
 # Developer platform
 cask "dotnet-sdk"
+# Launcher for *Epic Games* games
+cask "epic-games"
 # Utility to finds and fix problems on computer systems
 cask "etrecheckpro"
 # Desktop wallet for cryptocurrency assets
@@ -311,6 +332,8 @@ cask "macfuse"
 cask "mactracker"
 # Syncs files between computers and MEGA Cloud drives
 cask "megasync"
+# Sandbox construction video game
+cask "minecraft"
 # Open-source DJ software
 cask "mixxx"
 # Re-mounts write-protected NTFS volumes
@@ -321,8 +344,6 @@ cask "musicbrainz-picard"
 cask "netspot"
 # Keeps current IP address in sync
 cask "no-ip-duc"
-# VPN client for secure internet access and private browsing
-cask "nordvpn"
 # App to write, plan, collaborate, and get organised
 cask "notion"
 # Calendar for professionals and teams
@@ -333,8 +354,12 @@ cask "onyx"
 cask "openinterminal-lite"
 # Visual programming language for multimedia
 cask "pd"
+# Home media player
+cask "plex"
 # Graphical user interface for the 'defaults' command
 cask "prefs-editor"
+# VPN client focusing on security
+cask "protonvpn"
 # Peer to peer Bitorrent client
 cask "qbittorrent"
 # Display image info and preview unsupported formats in QuickLook
@@ -345,6 +370,8 @@ cask "qlmarkdown"
 cask "qlstephen"
 # Thumbnails, static previews, cover art and metadata for video files
 cask "qlvideo"
+# List out the contents of a zip file in the QuickLook preview
+cask "qlzipinfo"
 # IDE for application development
 cask "qt-creator"
 # Imaging utility to install operating systems to a microSD card
@@ -389,6 +416,7 @@ cask "xquartz"
 cask "yam-display"
 mas "Amphetamine", id: 937984704
 mas "FLIX IPTV", id: 1524212825
+mas "MEGA VPN", id: 6456784858
 mas "QuickShade", id: 931571202
 mas "screendimmer", id: 562058942
 mas "WireGuard", id: 1451685025
@@ -396,8 +424,8 @@ vscode "bmalehorn.shell-syntax"
 vscode "bracketpaircolordlw.bracket-pair-color-dlw"
 vscode "foxundermoon.shell-format"
 vscode "golang.go"
+vscode "lehni.vscode-fix-checksums"
 vscode "mhutchie.git-graph"
-vscode "mondersky.tabscolor"
 vscode "ms-python.debugpy"
 vscode "ms-python.python"
 vscode "ms-python.vscode-pylance"
