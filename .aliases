@@ -79,10 +79,11 @@ alias bp='brew upgrade'
 # osx utils
 alias mountReadWrite='/sbin/mount -uw /' # For use when booted into single-user
 alias removeDS="find . -name '.DS_Store' -depth -exec rm -f {} \;"
-alias removeDT="find . -name '._Trashes' -depth -exec rm -ff {} \;"
+alias removeDT="find . -name '._Trashes' -depth -exec rm -f {} \;"
 alias removeDD="find . -name '._*' -depth -exec rm -f {} \;"
+alias removeDAll="removeDT & removeDD & removeDS"
 alias cleanLaunchServices="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
-alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
-alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
-alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
-alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+alias showDots="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
+alias hideDots="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+alias showDesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+alias hideDesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
