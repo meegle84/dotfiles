@@ -87,3 +87,5 @@ alias showDots="defaults write com.apple.finder AppleShowAllFiles -bool true && 
 alias hideDots="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
 alias showDesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
 alias hideDesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+alias sleepDisable="sudo pmset -b sleep 0; sudo pmset -b disablesleep 1"
+alias sleepEnable="sudo pmset -b sleep 5; sudo pmset -b disablesleep 0"
