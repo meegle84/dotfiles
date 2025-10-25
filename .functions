@@ -8,8 +8,12 @@ readme() {
     for readme in {readme,README}.{md,MD,markdown,mkd,txt,TXT}; do
         if [[ -x "$(command -v glow)" ]] && [[ -f "$readme" ]]; then
             glow "$readme"
+            # exit after first found
+            break
         elif [[ -f "$readme" ]]; then
             cat "$readme"
+            # exit after first found
+            break
         fi
     done
 }
