@@ -1,0 +1,11 @@
+- defaults:
+    link:
+      create: true
+      relink: true
+      force: false
+
+- clean: ['~']
+
+- link:
+    ~/.zshenv: zsh/.zshenv
+    ~/.zsh: zsh
