@@ -9,3 +9,4 @@
 - link:
     ~/.zshenv: zsh/.zshenv
     ~/.zsh: zsh
+    ~/.gitconfig: git/.gitconfig
