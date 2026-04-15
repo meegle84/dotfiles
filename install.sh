@@ -12,4 +12,6 @@ fi
 
 brew bundle --file "${BASEDIR}/brew/Brewfile"
 
+pre-commit install --install-hooks
+
 dotbot -d "${BASEDIR}" -c "${BASEDIR}/install.conf.yaml" "$@"
