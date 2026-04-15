@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -12,6 +12,6 @@ fi
 
 brew bundle --file "${BASEDIR}/brew/Brewfile"
 
-pre-commit install --install-hooks
-
 dotbot -d "${BASEDIR}" -c "${BASEDIR}/install.conf.yaml" "$@"
+
+pre-commit install --install-hooks
