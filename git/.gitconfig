@@ -1,0 +1,22 @@
+[user]
+	email = 22105488+meegle84@users.noreply.github.com
+	name = meegle84
+[color]
+	ui = auto
+[merge]
+	conflictstyle = diff3
+[core]
+	editor = code
+[alias]
+	co = checkout
+	cob = checkout -b
+	br = branch
+	ci = commit
+	cim = commit -m
+	st = status
+	po = push origin
+	cp = cherry-pick
+	rb = rebase
+	rlog = reflog
+	rs = reset
+	tree = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
