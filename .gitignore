@@ -1,0 +1,11 @@
+.DS_Store
+*.swp
+*.swo
+
+# reference files (local only)
+.ref/
+
+# zsh runtime files
+zsh/.zcompcache/
+zsh/.zsh_sessions/
+zsh/.zcompdump*
