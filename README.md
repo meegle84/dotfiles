@@ -20,3 +20,16 @@ installed automatically if missing.
 
 Safe to run multiple times: dotbot relinks only what is missing and
 `brew bundle` skips what is already installed.
+
+## Uninstall
+
+```sh
+~/.dotfiles/uninstall.sh
+```
+
+Removes only the symlinks that point into `~/.dotfiles`. Safe to run
+multiple times.
+
+Install and uninstall are deliberately asymmetric: `install.sh` installs
+packages and links config; `uninstall.sh` only unlinks config. It never
+removes the repository, Homebrew packages or applications.
