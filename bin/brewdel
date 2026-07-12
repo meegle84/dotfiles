@@ -1,0 +1,45 @@
+#!/bin/zsh
+
+emulate -L zsh
+setopt pipefail no_unset
+
+# ${0:A} resolves the ~/.local/bin symlink back into the repo.
+repo_dir="${0:A:h:h}"
+source "$repo_dir/zsh/lib/update_helpers.zsh" || {
+  print -u2 "Failed to source helpers from $repo_dir/zsh/lib/update_helpers.zsh"
+  exit 1
+}
+
+dot_update_colors
+dot_update_require_cmd brew || exit 1
+
+usage() {
+  cat <<'EOF'
+Usage: brewdel <formula-or-cask> [...]
+
+Uninstalls the given packages, removes dependencies that became orphaned
+(brew autoremove), and regenerates the repo brew manifests so removals are
+reflected immediately.
+EOF
+}
+
+if (( $# == 0 )) || [[ "$1" == "-h" || "$1" == "--help" ]]; then
+  usage
+  exit $(( $# == 0 ? 2 : 0 ))
+fi
+
+dot_update_log "Uninstalling: $*"
+brew uninstall "$@" || {
+  dot_update_fail "brew uninstall failed."
+  exit 1
+}
+dot_update_done "Uninstall finished."
+
+dot_update_log "Removing orphaned dependencies..."
+brew autoremove || {
+  dot_update_fail "brew autoremove failed."
+  exit 1
+}
+dot_update_done "Orphaned dependencies removed."
+
+dot_update_refresh_brew_manifests "$repo_dir/brew" || exit 1
