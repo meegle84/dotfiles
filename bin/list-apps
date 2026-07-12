@@ -1,0 +1,416 @@
+#!/usr/bin/env python3
+"""
+list-apps — list all installed .app bundles and their install source.
+
+Sources detected:
+  brew   — installed via Homebrew cask
+  mas    — installed via Mac App Store  (requires: mas)
+  manual — everything else in /Applications or ~/Applications
+
+Price column, resolved automatically in four tiers:
+  1. mas apps    — iTunes Search API (network, best-effort)
+  2. brew/manual — annotations file (list-apps.annotations, same dir),
+                   part hand-curated seed, part auto-cache written by tier 3
+  3. brew casks  — OSS license detected on the cask's GitHub homepage ⇒ free
+                   (result auto-appended to the annotations file)
+  4. otherwise   — unknown
+
+Usage:
+  list-apps [--brew | --mas | --manual]
+  list-apps --json
+  list-apps --audit    # report missing/stale annotation entries
+"""
+import argparse
+import json
+import os
+import re
+import subprocess
+import sys
+import urllib.request
+
+_APP_DIRS = ["/Applications", os.path.expanduser("~/Applications")]
+
+
+def _caskroom() -> str:
+    """Resolve the Caskroom path from the live brew, arch-agnostic."""
+    try:
+        prefix = subprocess.run(
+            ["brew", "--prefix"], capture_output=True, text=True, timeout=10
+        ).stdout.strip()
+        if prefix:
+            return os.path.join(prefix, "Caskroom")
+    except Exception:
+        pass
+    for prefix in ("/opt/homebrew", "/usr/local"):
+        path = os.path.join(prefix, "Caskroom")
+        if os.path.isdir(path):
+            return path
+    return "/opt/homebrew/Caskroom"
+
+
+_CASKROOM = _caskroom()
+_ANNOTATIONS_PATH = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), "list-apps.annotations"
+)
+_CASK_HOMEPAGES: dict = {}
+
+
+def _normalize(name: str) -> str:
+    s = name.lower()
+    s = re.sub(r"[\s_./]+", "-", s)
+    s = re.sub(r"-+", "-", s)
+    return s.strip("-")
+
+
+def _brew_app_map() -> dict:
+    """Returns {app_stem: (cask_token, version)} via three detection layers."""
+    result: dict = {}
+    seen:   set  = set()
+
+    # ── Layer A: app artifacts from brew info --installed ────────────────────
+    pkg_only: list = []
+    try:
+        proc = subprocess.run(
+            ["brew", "info", "--json=v2", "--installed"],
+            capture_output=True, text=True, timeout=30,
+            env={**os.environ, "HOMEBREW_NO_ENV_HINTS": "1", "HOMEBREW_NO_AUTO_UPDATE": "1"},
+        )
+        data = json.loads(proc.stdout)
+    except Exception:
+        data = {}
+
+    tok_ver = {
+        c["token"]: c.get("installed") or ""
+        for c in data.get("casks", [])
+    }
+
+    for cask in data.get("casks", []):
+        token    = cask.get("token", "")
+        ver      = tok_ver.get(token, "")
+        if token:
+            _CASK_HOMEPAGES[token] = cask.get("homepage", "") or ""
+        artifacts = cask.get("artifacts", [])
+        app_arts  = [a for a in artifacts if "app" in a]
+        pkg_arts  = [a for a in artifacts if "pkg" in a]
+
+        if app_arts:
+            for art in app_arts:
+                source_name = target_name = None
+                for item in art["app"]:
+                    if isinstance(item, str) and item.endswith(".app"):
+                        source_name = item[:-4]
+                    elif isinstance(item, dict):
+                        t = item.get("target", "")
+                        if isinstance(t, str) and t.endswith(".app"):
+                            target_name = t[:-4]
+                stem = target_name or source_name
+                if stem and stem not in seen:
+                    seen.add(stem)
+                    result[stem] = (token, ver)
+        elif pkg_arts:
+            pkg_only.append(token)
+
+    # ── Layer B: pkg-only casks → pkgutil receipt scan ───────────────────────
+    if pkg_only:
+        try:
+            all_pkg_ids = subprocess.run(
+                ["pkgutil", "--pkgs"],
+                capture_output=True, text=True, timeout=15,
+            ).stdout.strip().splitlines()
+        except Exception:
+            all_pkg_ids = []
+
+        for token in pkg_only:
+            keywords = [p for p in re.split(r"[-_]", token) if len(p) > 3]
+            keywords.append(token.replace("-", "").replace("_", ""))
+            matching = [p for p in all_pkg_ids
+                        if any(k in p.lower() for k in keywords)]
+
+            for pkg_id in matching:
+                try:
+                    lines = subprocess.run(
+                        ["pkgutil", "--files", pkg_id],
+                        capture_output=True, text=True, timeout=10,
+                    ).stdout.splitlines()
+                except Exception:
+                    continue
+                for line in lines:
+                    line = line.strip()
+                    if not line.endswith(".app"):
+                        continue
+                    if not re.match(
+                        r"^(?:(?:Applications|Library/[^/]+)/)?[^/]+\.app$", line
+                    ):
+                        continue
+                    stem = os.path.basename(line)[:-4]
+                    if not stem.startswith(".") and stem not in seen:
+                        seen.add(stem)
+                        result[stem] = (token, tok_ver.get(token, ""))
+
+    # ── Layer C: fuzzy Caskroom token normalization ───────────────────────────
+    if os.path.isdir(_CASKROOM):
+        cask_tokens = {
+            t for t in os.listdir(_CASKROOM)
+            if not t.startswith(".") and os.path.isdir(os.path.join(_CASKROOM, t))
+        }
+        norm_map: dict = {}
+        for t in cask_tokens:
+            norm_map[_normalize(t)] = t
+            stripped = re.sub(r"\d+$", "", _normalize(t)).rstrip("-")
+            if stripped and stripped != _normalize(t):
+                norm_map.setdefault(stripped, t)
+
+        for appdir in _APP_DIRS:
+            if not os.path.isdir(appdir):
+                continue
+            for entry in os.listdir(appdir):
+                if not entry.endswith(".app"):
+                    continue
+                stem = entry[:-4]
+                if stem in seen:
+                    continue
+                n     = _normalize(stem)
+                token = norm_map.get(n)
+                if not token:
+                    short = re.sub(r"\d+$", "", n).rstrip("-")
+                    token = norm_map.get(short) if short else None
+                if token:
+                    seen.add(stem)
+                    result[stem] = (token, tok_ver.get(token, ""))
+
+    return result
+
+
+def _load_annotations() -> dict:
+    """Returns {key: price} from list-apps.annotations next to this script.
+
+    Format, one entry per line:  <cask-token-or-normalized-app-name> = paid|free  [# note]
+    """
+    result: dict = {}
+    try:
+        with open(_ANNOTATIONS_PATH, encoding="utf-8") as fh:
+            for line in fh:
+                line = line.split("#", 1)[0].strip()
+                if not line or "=" not in line:
+                    continue
+                key, _, value = line.partition("=")
+                key, value = key.strip(), value.strip().lower()
+                if key and value in ("paid", "free"):
+                    result[key] = value
+    except OSError:
+        pass
+    return result
+
+
+def _mas_prices(mas_ids: list) -> dict:
+    """Returns {mas_id: "free"|"paid"} via the iTunes Search API (best-effort)."""
+    result: dict = {}
+    if not mas_ids:
+        return result
+    url = "https://itunes.apple.com/lookup?id=" + ",".join(mas_ids)
+    try:
+        with urllib.request.urlopen(url, timeout=5) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        for item in data.get("results", []):
+            track_id = str(item.get("trackId", ""))
+            price = item.get("price")
+            if track_id and price is not None:
+                result[track_id] = "free" if price == 0 else "paid"
+    except Exception:
+        pass
+    return result
+
+
+def _github_license(homepage: str) -> str:
+    """Returns the SPDX id when the homepage is a GitHub repo with a license."""
+    m = re.match(r"https?://github\.com/([^/]+)/([^/#?]+)", homepage or "")
+    if not m:
+        return ""
+    repo = m.group(2)
+    if repo.endswith(".git"):
+        repo = repo[:-4]
+    url = f"https://api.github.com/repos/{m.group(1)}/{repo}/license"
+    try:
+        req = urllib.request.Request(
+            url, headers={"Accept": "application/vnd.github+json"}
+        )
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        spdx = (data.get("license") or {}).get("spdx_id") or ""
+        if spdx and spdx != "NOASSERTION":
+            return spdx
+    except Exception:
+        pass
+    return ""
+
+
+def _mas_app_map() -> dict:
+    """Returns {app_name: (mas_id, version)} for all Mac App Store apps."""
+    result: dict = {}
+    try:
+        proc = subprocess.run(
+            ["mas", "list"], capture_output=True, text=True, timeout=15
+        )
+    except FileNotFoundError:
+        return result
+    for line in proc.stdout.splitlines():
+        parts = line.split(None, 1)
+        if len(parts) < 2:
+            continue
+        mas_id, rest = parts
+        rest = rest.strip()
+        m = re.search(r"\s+\(([^)]*)\)\s*$", rest)
+        ver  = m.group(1) if m else ""
+        name = rest[:m.start()].strip() if m else rest
+        if name:
+            result[name] = (mas_id, ver)
+    return result
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="List installed .app bundles with their install source."
+    )
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--brew",   dest="filter", action="store_const", const="brew")
+    group.add_argument("--mas",    dest="filter", action="store_const", const="mas")
+    group.add_argument("--manual", dest="filter", action="store_const", const="manual")
+    parser.add_argument("--json", action="store_true")
+    parser.add_argument("--audit", action="store_true",
+                        help="report apps without price annotation and stale entries")
+    args = parser.parse_args()
+
+    brew = _brew_app_map()
+    mas  = _mas_app_map()
+    annotations = _load_annotations()
+
+    rows: list   = []
+    counts: dict = {"brew": 0, "mas": 0, "manual": 0}
+    seen_stems: set = set()
+
+    for appdir in _APP_DIRS:
+        if not os.path.isdir(appdir):
+            continue
+        for entry in os.listdir(appdir):
+            if not entry.endswith(".app"):
+                continue
+            stem = entry[:-4]
+            if stem in seen_stems:
+                continue
+            seen_stems.add(stem)
+
+            if stem in brew:
+                token, ver = brew[stem]
+                src, detail, key = "brew", f"cask: {token}", token
+            elif stem in mas:
+                mas_id, ver = mas[stem]
+                src, detail, key = "mas", f"id: {mas_id}", mas_id
+            else:
+                src, detail, key = "manual", appdir, _normalize(stem)
+                app_path = os.path.join(appdir, entry)
+                try:
+                    r = subprocess.run(
+                        ["mdls", "-name", "kMDItemVersion", app_path],
+                        capture_output=True, text=True, timeout=5,
+                    )
+                    ver = r.stdout.split("=", 1)[-1].strip().strip('"')
+                    if ver == "(null)":
+                        ver = ""
+                except Exception:
+                    ver = ""
+
+            counts[src] += 1
+            if args.filter and src != args.filter:
+                continue
+            rows.append((src, stem, ver, key, detail))
+
+    rows.sort()
+
+    mas_price = _mas_prices([key for src, _, _, key, _ in rows if src == "mas"])
+
+    def price_of(src: str, stem: str, key: str) -> str:
+        if src == "mas" and key in mas_price:
+            return mas_price[key]
+        return annotations.get(key) or annotations.get(_normalize(stem)) or "unknown"
+
+    # Tier 3: auto-resolve unknown casks whose GitHub homepage carries an OSS
+    # license, and cache the result in the annotations file.
+    auto_lines = []
+    for src, stem, _, key, _ in rows:
+        if src != "brew" or price_of(src, stem, key) != "unknown":
+            continue
+        spdx = _github_license(_CASK_HOMEPAGES.get(key, ""))
+        if spdx:
+            annotations[key] = "free"
+            auto_lines.append(f"{key} = free  # auto: {spdx} license on GitHub")
+    if auto_lines:
+        try:
+            with open(_ANNOTATIONS_PATH, "a", encoding="utf-8") as fh:
+                fh.write("\n".join(auto_lines) + "\n")
+        except OSError:
+            pass
+
+    installed_keys = set()
+    for src, stem, _, key, _ in rows:
+        installed_keys.add(key)
+        installed_keys.add(_normalize(stem))
+    missing_by_key: dict = {}
+    for src, stem, _, key, _ in rows:
+        if price_of(src, stem, key) == "unknown":
+            missing_by_key.setdefault(
+                key if src != "mas" else _normalize(stem), (stem, src)
+            )
+    missing = sorted((k, stem, src) for k, (stem, src) in missing_by_key.items())
+    stale = sorted(k for k in annotations if k not in installed_keys)
+
+    def print_audit(always_ok: bool) -> None:
+        if missing:
+            print("# apps without price annotation — fill in and append to list-apps.annotations:")
+            for key, stem, src in missing:
+                print(f"{key} =    # {stem} ({src})")
+        if stale:
+            print("# stale annotation entries (app no longer installed):")
+            for k in stale:
+                print(f"#   {k}")
+        if always_ok and not missing and not stale:
+            print("annotations complete and clean")
+
+    if args.audit:
+        print_audit(always_ok=True)
+        return
+
+    if args.json:
+        print(json.dumps(
+            [{"source": src, "app": app, "version": ver,
+              "price": price_of(src, app, key), "detail": det}
+             for src, app, ver, key, det in rows],
+            indent=2, ensure_ascii=False,
+        ))
+    else:
+        src_color   = {"brew": "\033[33m", "mas": "\033[34m", "manual": "\033[35m"}
+        price_color = {"paid": "\033[31m", "free": "\033[32m", "unknown": "\033[2m"}
+        reset = "\033[0m"
+        use_color = sys.stdout.isatty()
+
+        def paint(text: str, code: str) -> str:
+            return f"{code}{text}{reset}" if use_color and code else text
+
+        print(f"{'SOURCE':<8}  {'APP':<38}  {'VERSION':<14}  {'PRICE':<8}  DETAIL")
+        print("\u2500" * 90)
+        for src, app, ver, key, det in rows:
+            price = price_of(src, app, key)
+            print(f"{paint(f'{src:<8}', src_color.get(src, ''))}  {app:<38}  "
+                  f"{ver:<14}  {paint(f'{price:<8}', price_color.get(price, ''))}  {det}")
+        print()
+        total = sum(counts.values())
+        print("  ".join(
+            paint(f"{name}: {counts[name]}", src_color[name])
+            for name in ("brew", "mas", "manual")
+        ) + f"  total: {total}")
+        if missing or stale:
+            print()
+            print_audit(always_ok=False)
+
+
+if __name__ == "__main__":
+    main()
