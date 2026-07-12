@@ -1,2 +1,4 @@
+tap "buo/cask-upgrade"
 brew "dotbot"
+brew "mas"
 brew "pre-commit"

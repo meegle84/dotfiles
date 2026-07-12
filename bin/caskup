@@ -1,0 +1,78 @@
+#!/bin/zsh
+
+emulate -L zsh
+setopt pipefail no_unset
+
+# ${0:A} resolves the ~/.local/bin symlink back into the repo.
+repo_dir="${0:A:h:h}"
+source "$repo_dir/zsh/lib/update_helpers.zsh" || {
+  print -u2 "Failed to source helpers from $repo_dir/zsh/lib/update_helpers.zsh"
+  exit 1
+}
+
+dot_update_colors
+dot_update_require_cmd brew || exit 1
+
+usage() {
+  cat <<'EOF'
+Usage: caskup [--all] [--yes]
+
+Default: interactive and conservative (no auto-update casks).
+  --all   Include casks that auto-update.
+  --yes   Answer yes to upgrade prompts (non-interactive).
+EOF
+}
+
+include_auto_updates=0
+assume_yes=0
+while (( $# )); do
+  case "$1" in
+    --all)
+      include_auto_updates=1
+      ;;
+    --yes)
+      assume_yes=1
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      dot_update_fail "Unknown option: $1"
+      usage
+      exit 2
+      ;;
+  esac
+  shift
+done
+
+if ! brew cu --help >/dev/null 2>&1; then
+  dot_update_fail "brew cu is not available. Install the buo/cask-upgrade tap (brew bundle) first."
+  exit 1
+fi
+
+dot_update_log "Running Cask Updates..."
+caskup_cmd=(brew cu)
+if (( include_auto_updates )); then
+  caskup_cmd+=(-a)
+fi
+if (( assume_yes )); then
+  caskup_cmd+=(-y)
+fi
+"${caskup_cmd[@]}" || {
+  dot_update_fail "brew cu failed."
+  exit 1
+}
+dot_update_done "Cask Updates Finished."
+
+if command -v mas >/dev/null 2>&1; then
+  dot_update_log "Running App Store Updates..."
+  mas outdated || true
+  mas upgrade || {
+    dot_update_fail "mas upgrade failed."
+    exit 1
+  }
+  dot_update_done "App Store Updates Finished."
+fi
+
+dot_update_refresh_brew_manifests "$repo_dir/brew" || exit 1

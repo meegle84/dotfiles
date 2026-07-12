@@ -10,3 +10,4 @@
     ~/.gitconfig: git/.gitconfig
     ~/.local/bin/brewup: bin/brewup
     ~/.local/bin/brewdel: bin/brewdel
+    ~/.local/bin/caskup: bin/caskup
