@@ -1,0 +1,91 @@
+#!/bin/zsh
+
+emulate -L zsh
+setopt pipefail no_unset extended_glob
+
+# ${0:A} resolves the ~/.local/bin symlink back into the repo.
+repo_dir="${0:A:h:h}"
+source "$repo_dir/zsh/lib/update_helpers.zsh" || {
+  print -u2 "Failed to source helpers from $repo_dir/zsh/lib/update_helpers.zsh"
+  exit 1
+}
+
+dot_update_colors
+
+usage() {
+  cat <<'EOF'
+Usage: osxup [--apply]
+
+--apply  Install non-macOS updates listed by softwareupdate.
+         Without this flag, osxup runs in dry-run mode and only lists updates.
+
+macOS system upgrades are always excluded (entries titled "macOS ...");
+install those deliberately via System Settings.
+EOF
+}
+
+apply_updates=0
+while (( $# )); do
+  case "$1" in
+    --apply)
+      apply_updates=1
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      dot_update_fail "Unknown option: $1"
+      usage
+      exit 2
+      ;;
+  esac
+  shift
+done
+
+dot_update_require_cmd softwareupdate || exit 1
+
+dot_update_log "Finding software updates..."
+all_updates_output="$(softwareupdate --list 2>&1)" || {
+  dot_update_fail "softwareupdate --list failed."
+  exit 1
+}
+print -r -- "$all_updates_output"
+dot_update_done "Finding software updates finished."
+
+# macOS system upgrades are identified structurally by their Title field
+# ("macOS <Name> <version>"). Labels are NOT reliable: app labels can embed
+# the OS codename (e.g. "Safari26.5.2SequoiaAuto"), and the
+# --product-types macOS filter returns non-OS entries too (broken upstream).
+non_macos_labels=()
+while IFS=$'\t' read -r label title; do
+  [[ -n "$label" ]] || continue
+  if [[ "$title" == macOS* || "$label" == "macOS "* ]]; then
+    print -P "%F{yellow}==>%f Skipping macOS system upgrade: $label"
+    continue
+  fi
+  non_macos_labels+=("$label")
+done < <(print -r -- "$all_updates_output" | awk '
+  /^\* Label: / { label = substr($0, 10) }
+  /^\tTitle: /  { title = $0; sub(/^\tTitle: /, "", title); sub(/,.*/, "", title); print label "\t" title }
+')
+
+if (( ${#non_macos_labels[@]} == 0 )); then
+  dot_update_done "No non-macOS software updates to install."
+  exit 0
+fi
+
+dot_update_log "Non-macOS software updates available:"
+print -l -- "${non_macos_labels[@]}"
+
+if (( apply_updates == 0 )); then
+  dot_update_done "Dry run only. Re-run with --apply to install these updates."
+  exit 0
+fi
+
+dot_update_log "Installing non-macOS software updates..."
+softwareupdate --install "${non_macos_labels[@]}" || {
+  dot_update_fail "Installing non-macOS software updates failed."
+  exit 1
+}
+dot_update_done "Installing non-macOS software updates finished."
