@@ -1,0 +1,41 @@
+#!/bin/zsh
+
+emulate -L zsh
+setopt pipefail no_unset
+
+# ${0:A} resolves the ~/.local/bin symlink back into the repo.
+repo_dir="${0:A:h:h}"
+source "$repo_dir/zsh/lib/update_helpers.zsh" || {
+  print -u2 "Failed to source helpers from $repo_dir/zsh/lib/update_helpers.zsh"
+  exit 1
+}
+
+dot_update_colors
+dot_update_require_cmd brew || exit 1
+
+dot_update_log "Running Brew Diagnostic..."
+brew doctor || true
+brew missing || true
+dot_update_done "Brew Diagnostic Finished."
+
+dot_update_log "Running Formula Updates..."
+brew update || {
+  dot_update_fail "brew update failed."
+  exit 1
+}
+brew outdated --formula || true
+brew upgrade --formula || {
+  dot_update_fail "brew upgrade --formula failed."
+  exit 1
+}
+brew cleanup -s || {
+  dot_update_fail "brew cleanup failed."
+  exit 1
+}
+brew autoremove || {
+  dot_update_fail "brew autoremove failed."
+  exit 1
+}
+dot_update_done "Formula Updates Finished."
+
+dot_update_refresh_brew_manifests "$repo_dir/brew" || exit 1

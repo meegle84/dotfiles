@@ -8,3 +8,4 @@
     ~/.zshenv: zsh/.zshenv
     ~/.zsh: zsh
     ~/.gitconfig: git/.gitconfig
+    ~/.local/bin/brewup: bin/brewup
