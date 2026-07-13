@@ -53,6 +53,10 @@ _ANNOTATIONS_PATH = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), "list-apps.annotations"
 )
 _CASK_HOMEPAGES: dict = {}
+_CASK_STATUS: dict = {}
+_CASK_DESC: dict = {}
+_CASK_AUTOUPDATES: dict = {}
+_CASK_OUTDATED: dict = {}
 
 
 def _normalize(name: str) -> str:
@@ -89,6 +93,13 @@ def _brew_app_map() -> dict:
         ver      = tok_ver.get(token, "")
         if token:
             _CASK_HOMEPAGES[token] = cask.get("homepage", "") or ""
+            _CASK_DESC[token] = cask.get("desc", "") or ""
+            _CASK_AUTOUPDATES[token] = bool(cask.get("auto_updates"))
+            _CASK_OUTDATED[token] = bool(cask.get("outdated"))
+            if cask.get("disabled"):
+                _CASK_STATUS[token] = "disabled"
+            elif cask.get("deprecated"):
+                _CASK_STATUS[token] = "deprecated"
         artifacts = cask.get("artifacts", [])
         app_arts  = [a for a in artifacts if "app" in a]
         pkg_arts  = [a for a in artifacts if "pkg" in a]
@@ -221,6 +232,21 @@ def _mas_prices(mas_ids: list) -> dict:
     return result
 
 
+def _last_used(app_path: str) -> str:
+    """Returns the Spotlight last-used date (YYYY-MM-DD) or ""."""
+    try:
+        r = subprocess.run(
+            ["mdls", "-name", "kMDItemLastUsedDate", app_path],
+            capture_output=True, text=True, timeout=5,
+        )
+        val = r.stdout.split("=", 1)[-1].strip()
+        if val and val != "(null)":
+            return val.split()[0]
+    except Exception:
+        pass
+    return ""
+
+
 def _github_license(homepage: str) -> str:
     """Returns the SPDX id when the homepage is a GitHub repo with a license."""
     m = re.match(r"https?://github\.com/([^/]+)/([^/#?]+)", homepage or "")
@@ -298,6 +324,8 @@ def main() -> None:
             if stem in seen_stems:
                 continue
             seen_stems.add(stem)
+            app_path = os.path.join(appdir, entry)
+            last = _last_used(app_path)
 
             if stem in brew:
                 token, ver = brew[stem]
@@ -307,7 +335,6 @@ def main() -> None:
                 src, detail, key = "mas", f"id: {mas_id}", mas_id
             else:
                 src, detail, key = "manual", appdir, _normalize(stem)
-                app_path = os.path.join(appdir, entry)
                 try:
                     r = subprocess.run(
                         ["mdls", "-name", "kMDItemVersion", app_path],
@@ -322,11 +349,11 @@ def main() -> None:
             counts[src] += 1
             if args.filter and src != args.filter:
                 continue
-            rows.append((src, stem, ver, key, detail))
+            rows.append((src, stem, ver, key, detail, last))
 
     rows.sort()
 
-    mas_price = _mas_prices([key for src, _, _, key, _ in rows if src == "mas"])
+    mas_price = _mas_prices([key for src, _, _, key, _, _ in rows if src == "mas"])
 
     def price_of(src: str, stem: str, key: str) -> str:
         if src == "mas" and key in mas_price:
@@ -336,7 +363,7 @@ def main() -> None:
     # Tier 3: auto-resolve unknown casks whose GitHub homepage carries an OSS
     # license, and cache the result in the annotations file.
     auto_lines = []
-    for src, stem, _, key, _ in rows:
+    for src, stem, _, key, _, _ in rows:
         if src != "brew" or price_of(src, stem, key) != "unknown":
             continue
         spdx = _github_license(_CASK_HOMEPAGES.get(key, ""))
@@ -351,11 +378,11 @@ def main() -> None:
             pass
 
     installed_keys = set()
-    for src, stem, _, key, _ in rows:
+    for src, stem, _, key, _, _ in rows:
         installed_keys.add(key)
         installed_keys.add(_normalize(stem))
     missing_by_key: dict = {}
-    for src, stem, _, key, _ in rows:
+    for src, stem, _, key, _, _ in rows:
         if price_of(src, stem, key) == "unknown":
             missing_by_key.setdefault(
                 key if src != "mas" else _normalize(stem), (stem, src)
@@ -379,11 +406,19 @@ def main() -> None:
         print_audit(always_ok=True)
         return
 
+    def status_of(src: str, key: str) -> str:
+        return _CASK_STATUS.get(key, "ok") if src == "brew" else "ok"
+
     if args.json:
         print(json.dumps(
             [{"source": src, "app": app, "version": ver,
-              "price": price_of(src, app, key), "detail": det}
-             for src, app, ver, key, det in rows],
+              "price": price_of(src, app, key),
+              "status": status_of(src, key),
+              "outdated": _CASK_OUTDATED.get(key, False) if src == "brew" else False,
+              "auto_updates": _CASK_AUTOUPDATES.get(key) if src == "brew" else None,
+              "desc": _CASK_DESC.get(key, "") if src == "brew" else "",
+              "last_used": last, "detail": det}
+             for src, app, ver, key, det, last in rows],
             indent=2, ensure_ascii=False,
         ))
     else:
@@ -395,12 +430,26 @@ def main() -> None:
         def paint(text: str, code: str) -> str:
             return f"{code}{text}{reset}" if use_color and code else text
 
-        print(f"{'SOURCE':<8}  {'APP':<38}  {'VERSION':<14}  {'PRICE':<8}  DETAIL")
-        print("\u2500" * 90)
-        for src, app, ver, key, det in rows:
+        print(f"{'SOURCE':<8}  {'APP':<38}  {'VERSION':<14}  {'STATE':<8}  {'PRICE':<8}  {'LAST USED':<10}  DETAIL")
+        print("\u2500" * 108)
+        for src, app, ver, key, det, last in rows:
             price = price_of(src, app, key)
+            status = status_of(src, key)
+            flags = []
+            if status == "deprecated":
+                flags.append("dep")
+            elif status == "disabled":
+                flags.append("dis")
+            if src == "brew" and _CASK_OUTDATED.get(key):
+                flags.append("out")
+            state = "+".join(flags)
+            state_code = ("\033[31m" if "dis" in flags else
+                          "\033[33m" if "dep" in flags else
+                          "\033[36m" if flags else "")
             print(f"{paint(f'{src:<8}', src_color.get(src, ''))}  {app:<38}  "
-                  f"{ver:<14}  {paint(f'{price:<8}', price_color.get(price, ''))}  {det}")
+                  f"{ver:<14}  {paint(f'{state:<8}', state_code)}  "
+                  f"{paint(f'{price:<8}', price_color.get(price, ''))}  "
+                  f"{last:<10}  {det}")
         print()
         total = sum(counts.values())
         print("  ".join(
