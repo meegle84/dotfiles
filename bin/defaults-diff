@@ -1,0 +1,80 @@
+#!/bin/zsh
+# Capture conscious `defaults` changes: snapshot, tweak a setting in the
+# UI, diff — the changed keys appear ready to add to macos-defaults.sh.
+#
+# Usage:
+#   defaults-diff snap    # take/replace the snapshot
+#   defaults-diff         # diff current state against the snapshot
+
+emulate -L zsh
+setopt pipefail no_unset
+
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/defaults-diff"
+SNAP_DIR="$STATE_DIR/snapshot"
+
+# Domains whose churn is system noise, never a conscious setting.
+NOISE_DOMAINS=(
+  'com.apple.EmojiCache'
+  'com.apple.identityservices.idstatuscache'
+  'com.apple.knowledge-agent'
+  'com.apple.spaces'
+  'com.apple.xpc.activity2'
+  'ContextStoreAgent'
+  'MobileMeAccounts'
+)
+
+list_domains() {
+  local domain
+  for domain in $(defaults domains | tr ',' ' ') NSGlobalDomain; do
+    if (( ${NOISE_DOMAINS[(Ie)$domain]} == 0 )); then
+      print -r -- "$domain"
+    fi
+  done
+}
+
+dump_domains() {
+  local target_dir="$1" domain
+  mkdir -p "$target_dir"
+  list_domains | while IFS= read -r domain; do
+    defaults read "$domain" > "$target_dir/$domain" 2>/dev/null || true
+  done
+}
+
+case "${1:-diff}" in
+  snap)
+    rm -rf "$SNAP_DIR"
+    dump_domains "$SNAP_DIR"
+    print "snapshot taken: $(ls "$SNAP_DIR" | wc -l | tr -d ' ') domains"
+    ;;
+  diff)
+    if [ ! -d "$SNAP_DIR" ]; then
+      print -u2 "no snapshot found; run: defaults-diff snap"
+      exit 1
+    fi
+    tmp_dir="$(mktemp -d)"
+    trap 'rm -rf "$tmp_dir"' EXIT
+    dump_domains "$tmp_dir"
+    changed=0
+    for domain in $(diff -rq "$SNAP_DIR" "$tmp_dir" 2>/dev/null | awk '
+      /^Files /   { n = split($2, p, "/"); print p[n] }
+      /^Only in / { sub(/.*: /, ""); print }
+    ' | sort -u); do
+      print -P "%F{yellow}==> $domain%f"
+      old="$SNAP_DIR/$domain"; new="$tmp_dir/$domain"
+      [ -f "$old" ] || old=/dev/null
+      [ -f "$new" ] || new=/dev/null
+      diff -u "$old" "$new" 2>/dev/null | grep -E '^[+-][^+-]' || true
+      changed=1
+    done
+    if (( changed == 0 )); then
+      print "no changes since snapshot"
+    fi
+    ;;
+  -h|--help)
+    sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//'
+    ;;
+  *)
+    print -u2 "unknown option: $1 (use: snap | diff)"
+    exit 2
+    ;;
+esac
