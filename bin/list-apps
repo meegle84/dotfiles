@@ -5,7 +5,7 @@ list-apps — list all installed .app bundles and their install source.
 Sources detected:
   brew   — installed via Homebrew cask
   mas    — installed via Mac App Store  (requires: mas)
-  manual — everything else in /Applications or ~/Applications
+  manual — everything else in the scanned app dirs
 
 Price column, resolved automatically in four tiers:
   1. mas apps    — iTunes Search API (network, best-effort)
@@ -28,35 +28,50 @@ import subprocess
 import sys
 import urllib.request
 
-_APP_DIRS = ["/Applications", os.path.expanduser("~/Applications")]
+# ── Configuration ────────────────────────────────────────────────────────────
 
+APP_DIRS = ["/Applications", os.path.expanduser("~/Applications")]
+BREW_PREFIX_FALLBACKS = ["/opt/homebrew", "/usr/local"]
+ANNOTATIONS_FILE = "list-apps.annotations"
 
-def _caskroom() -> str:
-    """Resolve the Caskroom path from the live brew, arch-agnostic."""
-    try:
-        prefix = subprocess.run(
-            ["brew", "--prefix"], capture_output=True, text=True, timeout=10
-        ).stdout.strip()
-        if prefix:
-            return os.path.join(prefix, "Caskroom")
-    except Exception:
-        pass
-    for prefix in ("/opt/homebrew", "/usr/local"):
-        path = os.path.join(prefix, "Caskroom")
-        if os.path.isdir(path):
-            return path
-    return "/opt/homebrew/Caskroom"
+ITUNES_LOOKUP_URL = "https://itunes.apple.com/lookup?id={ids}"
+GITHUB_LICENSE_URL = "https://api.github.com/repos/{owner}/{repo}/license"
 
+TIMEOUT_BREW = 30
+TIMEOUT_CMD = 15
+TIMEOUT_MDLS = 5
+TIMEOUT_HTTP = 5
 
-_CASKROOM = _caskroom()
+# (header, width); width 0 = last column, no padding
+TABLE_COLUMNS = [
+    ("SOURCE", 8), ("APP", 38), ("VERSION", 14), ("STATE", 12),
+    ("PRICE", 8), ("LAST USED", 10), ("DETAIL", 0),
+]
+
+RESET = "\033[0m"
+SRC_COLORS = {"brew": "\033[33m", "mas": "\033[34m", "manual": "\033[35m"}
+PRICE_COLORS = {"paid": "\033[31m", "free": "\033[32m", "unknown": "\033[2m"}
+STATE_COLORS = {"dis": "\033[31m", "dep": "\033[33m", "out": "\033[36m", "auto": "\033[2m"}
+
+# Populated while parsing brew metadata: token → value.
+_CASK_META: dict = {}
+
 _ANNOTATIONS_PATH = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), "list-apps.annotations"
+    os.path.dirname(os.path.realpath(__file__)), ANNOTATIONS_FILE
 )
-_CASK_HOMEPAGES: dict = {}
-_CASK_STATUS: dict = {}
-_CASK_DESC: dict = {}
-_CASK_AUTOUPDATES: dict = {}
-_CASK_OUTDATED: dict = {}
+
+
+# ── Small helpers ────────────────────────────────────────────────────────────
+
+def _run(cmd: list, timeout: int, env: dict = None) -> str:
+    """Run a command, return stdout ("" on any failure)."""
+    try:
+        return subprocess.run(
+            cmd, capture_output=True, text=True, timeout=timeout,
+            env=env,
+        ).stdout
+    except Exception:
+        return ""
 
 
 def _normalize(name: str) -> str:
@@ -66,20 +81,50 @@ def _normalize(name: str) -> str:
     return s.strip("-")
 
 
+def _caskroom() -> str:
+    """Resolve the Caskroom path from the live brew, arch-agnostic."""
+    prefix = _run(["brew", "--prefix"], TIMEOUT_CMD).strip()
+    if prefix:
+        return os.path.join(prefix, "Caskroom")
+    for prefix in BREW_PREFIX_FALLBACKS:
+        path = os.path.join(prefix, "Caskroom")
+        if os.path.isdir(path):
+            return path
+    return os.path.join(BREW_PREFIX_FALLBACKS[0], "Caskroom")
+
+
+def _last_used(app_path: str) -> str:
+    """Returns the Spotlight last-used date (YYYY-MM-DD) or ""."""
+    out = _run(["mdls", "-name", "kMDItemLastUsedDate", app_path], TIMEOUT_MDLS)
+    val = out.split("=", 1)[-1].strip()
+    if val and val != "(null)":
+        return val.split()[0]
+    return ""
+
+
+def _mdls_version(app_path: str) -> str:
+    out = _run(["mdls", "-name", "kMDItemVersion", app_path], TIMEOUT_MDLS)
+    ver = out.split("=", 1)[-1].strip().strip('"')
+    return "" if ver == "(null)" else ver
+
+
+# ── Source detection ─────────────────────────────────────────────────────────
+
 def _brew_app_map() -> dict:
-    """Returns {app_stem: (cask_token, version)} via three detection layers."""
+    """Returns {app_stem: (cask_token, version)} via three detection layers.
+
+    Side effect: fills _CASK_META with per-token homepage/desc/status flags.
+    """
     result: dict = {}
     seen:   set  = set()
 
     # ── Layer A: app artifacts from brew info --installed ────────────────────
     pkg_only: list = []
     try:
-        proc = subprocess.run(
-            ["brew", "info", "--json=v2", "--installed"],
-            capture_output=True, text=True, timeout=30,
+        data = json.loads(_run(
+            ["brew", "info", "--json=v2", "--installed"], TIMEOUT_BREW,
             env={**os.environ, "HOMEBREW_NO_ENV_HINTS": "1", "HOMEBREW_NO_AUTO_UPDATE": "1"},
-        )
-        data = json.loads(proc.stdout)
+        ))
     except Exception:
         data = {}
 
@@ -92,14 +137,14 @@ def _brew_app_map() -> dict:
         token    = cask.get("token", "")
         ver      = tok_ver.get(token, "")
         if token:
-            _CASK_HOMEPAGES[token] = cask.get("homepage", "") or ""
-            _CASK_DESC[token] = cask.get("desc", "") or ""
-            _CASK_AUTOUPDATES[token] = bool(cask.get("auto_updates"))
-            _CASK_OUTDATED[token] = bool(cask.get("outdated"))
-            if cask.get("disabled"):
-                _CASK_STATUS[token] = "disabled"
-            elif cask.get("deprecated"):
-                _CASK_STATUS[token] = "deprecated"
+            _CASK_META[token] = {
+                "homepage": cask.get("homepage", "") or "",
+                "desc": cask.get("desc", "") or "",
+                "auto_updates": bool(cask.get("auto_updates")),
+                "outdated": bool(cask.get("outdated")),
+                "status": ("disabled" if cask.get("disabled")
+                           else "deprecated" if cask.get("deprecated") else "ok"),
+            }
         artifacts = cask.get("artifacts", [])
         app_arts  = [a for a in artifacts if "app" in a]
         pkg_arts  = [a for a in artifacts if "pkg" in a]
@@ -123,13 +168,7 @@ def _brew_app_map() -> dict:
 
     # ── Layer B: pkg-only casks → pkgutil receipt scan ───────────────────────
     if pkg_only:
-        try:
-            all_pkg_ids = subprocess.run(
-                ["pkgutil", "--pkgs"],
-                capture_output=True, text=True, timeout=15,
-            ).stdout.strip().splitlines()
-        except Exception:
-            all_pkg_ids = []
+        all_pkg_ids = _run(["pkgutil", "--pkgs"], TIMEOUT_CMD).strip().splitlines()
 
         for token in pkg_only:
             keywords = [p for p in re.split(r"[-_]", token) if len(p) > 3]
@@ -138,14 +177,7 @@ def _brew_app_map() -> dict:
                         if any(k in p.lower() for k in keywords)]
 
             for pkg_id in matching:
-                try:
-                    lines = subprocess.run(
-                        ["pkgutil", "--files", pkg_id],
-                        capture_output=True, text=True, timeout=10,
-                    ).stdout.splitlines()
-                except Exception:
-                    continue
-                for line in lines:
+                for line in _run(["pkgutil", "--files", pkg_id], TIMEOUT_CMD).splitlines():
                     line = line.strip()
                     if not line.endswith(".app"):
                         continue
@@ -159,10 +191,11 @@ def _brew_app_map() -> dict:
                         result[stem] = (token, tok_ver.get(token, ""))
 
     # ── Layer C: fuzzy Caskroom token normalization ───────────────────────────
-    if os.path.isdir(_CASKROOM):
+    caskroom = _caskroom()
+    if os.path.isdir(caskroom):
         cask_tokens = {
-            t for t in os.listdir(_CASKROOM)
-            if not t.startswith(".") and os.path.isdir(os.path.join(_CASKROOM, t))
+            t for t in os.listdir(caskroom)
+            if not t.startswith(".") and os.path.isdir(os.path.join(caskroom, t))
         }
         norm_map: dict = {}
         for t in cask_tokens:
@@ -171,7 +204,7 @@ def _brew_app_map() -> dict:
             if stripped and stripped != _normalize(t):
                 norm_map.setdefault(stripped, t)
 
-        for appdir in _APP_DIRS:
+        for appdir in APP_DIRS:
             if not os.path.isdir(appdir):
                 continue
             for entry in os.listdir(appdir):
@@ -192,8 +225,72 @@ def _brew_app_map() -> dict:
     return result
 
 
+def _mas_app_map() -> dict:
+    """Returns {app_name: (mas_id, version)} for all Mac App Store apps."""
+    result: dict = {}
+    for line in _run(["mas", "list"], TIMEOUT_CMD).splitlines():
+        parts = line.split(None, 1)
+        if len(parts) < 2:
+            continue
+        mas_id, rest = parts
+        rest = rest.strip()
+        m = re.search(r"\s+\(([^)]*)\)\s*$", rest)
+        ver  = m.group(1) if m else ""
+        name = rest[:m.start()].strip() if m else rest
+        if name:
+            result[name] = (mas_id, ver)
+    return result
+
+
+def collect_rows(src_filter: str) -> tuple:
+    """Scans APP_DIRS and returns (rows, counts).
+
+    Row: (source, app_stem, version, key, detail, last_used) where key is the
+    cask token (brew), the mas id (mas) or the normalized name (manual).
+    """
+    brew = _brew_app_map()
+    mas  = _mas_app_map()
+
+    rows: list   = []
+    counts: dict = {"brew": 0, "mas": 0, "manual": 0}
+    seen_stems: set = set()
+
+    for appdir in APP_DIRS:
+        if not os.path.isdir(appdir):
+            continue
+        for entry in os.listdir(appdir):
+            if not entry.endswith(".app"):
+                continue
+            stem = entry[:-4]
+            if stem in seen_stems:
+                continue
+            seen_stems.add(stem)
+            app_path = os.path.join(appdir, entry)
+            last = _last_used(app_path)
+
+            if stem in brew:
+                token, ver = brew[stem]
+                src, detail, key = "brew", f"cask: {token}", token
+            elif stem in mas:
+                mas_id, ver = mas[stem]
+                src, detail, key = "mas", f"id: {mas_id}", mas_id
+            else:
+                src, detail, key = "manual", appdir, _normalize(stem)
+                ver = _mdls_version(app_path)
+
+            counts[src] += 1
+            if src_filter and src != src_filter:
+                continue
+            rows.append((src, stem, ver, key, detail, last))
+
+    rows.sort()
+    return rows, counts
+
+
+# ── Price resolution ─────────────────────────────────────────────────────────
+
 def _load_annotations() -> dict:
-    """Returns {key: price} from list-apps.annotations next to this script.
+    """Returns {key: price} from the annotations file.
 
     Format, one entry per line:  <cask-token-or-normalized-app-name> = paid|free  [# note]
     """
@@ -218,9 +315,9 @@ def _mas_prices(mas_ids: list) -> dict:
     result: dict = {}
     if not mas_ids:
         return result
-    url = "https://itunes.apple.com/lookup?id=" + ",".join(mas_ids)
+    url = ITUNES_LOOKUP_URL.format(ids=",".join(mas_ids))
     try:
-        with urllib.request.urlopen(url, timeout=5) as resp:
+        with urllib.request.urlopen(url, timeout=TIMEOUT_HTTP) as resp:
             data = json.loads(resp.read().decode("utf-8"))
         for item in data.get("results", []):
             track_id = str(item.get("trackId", ""))
@@ -232,21 +329,6 @@ def _mas_prices(mas_ids: list) -> dict:
     return result
 
 
-def _last_used(app_path: str) -> str:
-    """Returns the Spotlight last-used date (YYYY-MM-DD) or ""."""
-    try:
-        r = subprocess.run(
-            ["mdls", "-name", "kMDItemLastUsedDate", app_path],
-            capture_output=True, text=True, timeout=5,
-        )
-        val = r.stdout.split("=", 1)[-1].strip()
-        if val and val != "(null)":
-            return val.split()[0]
-    except Exception:
-        pass
-    return ""
-
-
 def _github_license(homepage: str) -> str:
     """Returns the SPDX id when the homepage is a GitHub repo with a license."""
     m = re.match(r"https?://github\.com/([^/]+)/([^/#?]+)", homepage or "")
@@ -255,12 +337,12 @@ def _github_license(homepage: str) -> str:
     repo = m.group(2)
     if repo.endswith(".git"):
         repo = repo[:-4]
-    url = f"https://api.github.com/repos/{m.group(1)}/{repo}/license"
+    url = GITHUB_LICENSE_URL.format(owner=m.group(1), repo=repo)
     try:
         req = urllib.request.Request(
             url, headers={"Accept": "application/vnd.github+json"}
         )
-        with urllib.request.urlopen(req, timeout=5) as resp:
+        with urllib.request.urlopen(req, timeout=TIMEOUT_HTTP) as resp:
             data = json.loads(resp.read().decode("utf-8"))
         spdx = (data.get("license") or {}).get("spdx_id") or ""
         if spdx and spdx != "NOASSERTION":
@@ -270,27 +352,136 @@ def _github_license(homepage: str) -> str:
     return ""
 
 
-def _mas_app_map() -> dict:
-    """Returns {app_name: (mas_id, version)} for all Mac App Store apps."""
-    result: dict = {}
-    try:
-        proc = subprocess.run(
-            ["mas", "list"], capture_output=True, text=True, timeout=15
-        )
-    except FileNotFoundError:
-        return result
-    for line in proc.stdout.splitlines():
-        parts = line.split(None, 1)
-        if len(parts) < 2:
+def resolve_prices(rows: list, annotations: dict) -> callable:
+    """Returns price_of(src, stem, key). Auto-resolves unknown OSS casks via
+    their GitHub license and caches the result in the annotations file."""
+    mas_price = _mas_prices([key for src, _, _, key, _, _ in rows if src == "mas"])
+
+    def price_of(src: str, stem: str, key: str) -> str:
+        if src == "mas" and key in mas_price:
+            return mas_price[key]
+        return annotations.get(key) or annotations.get(_normalize(stem)) or "unknown"
+
+    auto_lines = []
+    for src, stem, _, key, _, _ in rows:
+        if src != "brew" or price_of(src, stem, key) != "unknown":
             continue
-        mas_id, rest = parts
-        rest = rest.strip()
-        m = re.search(r"\s+\(([^)]*)\)\s*$", rest)
-        ver  = m.group(1) if m else ""
-        name = rest[:m.start()].strip() if m else rest
-        if name:
-            result[name] = (mas_id, ver)
-    return result
+        spdx = _github_license(_CASK_META.get(key, {}).get("homepage", ""))
+        if spdx:
+            annotations[key] = "free"
+            auto_lines.append(f"{key} = free  # auto: {spdx} license on GitHub")
+    if auto_lines:
+        try:
+            with open(_ANNOTATIONS_PATH, "a", encoding="utf-8") as fh:
+                fh.write("\n".join(auto_lines) + "\n")
+        except OSError:
+            pass
+
+    return price_of
+
+
+# ── Output ───────────────────────────────────────────────────────────────────
+
+def compute_audit(rows: list, annotations: dict, price_of) -> tuple:
+    """Returns (missing, stale) annotation entries."""
+    installed_keys = set()
+    for src, stem, _, key, _, _ in rows:
+        installed_keys.add(key)
+        installed_keys.add(_normalize(stem))
+    missing_by_key: dict = {}
+    for src, stem, _, key, _, _ in rows:
+        if price_of(src, stem, key) == "unknown":
+            missing_by_key.setdefault(
+                key if src != "mas" else _normalize(stem), (stem, src)
+            )
+    missing = sorted((k, stem, src) for k, (stem, src) in missing_by_key.items())
+    stale = sorted(k for k in annotations if k not in installed_keys)
+    return missing, stale
+
+
+def print_audit(missing: list, stale: list, always_ok: bool) -> None:
+    if missing:
+        print(f"# apps without price annotation — fill in and append to {ANNOTATIONS_FILE}:")
+        for key, stem, src in missing:
+            print(f"{key} =    # {stem} ({src})")
+    if stale:
+        print("# stale annotation entries (app no longer installed):")
+        for k in stale:
+            print(f"#   {k}")
+    if always_ok and not missing and not stale:
+        print("annotations complete and clean")
+
+
+def state_flags(src: str, key: str) -> list:
+    meta = _CASK_META.get(key, {}) if src == "brew" else {}
+    flags = []
+    if meta.get("status") == "deprecated":
+        flags.append("dep")
+    elif meta.get("status") == "disabled":
+        flags.append("dis")
+    if meta.get("outdated"):
+        flags.append("out")
+    if meta.get("auto_updates"):
+        flags.append("auto")
+    return flags
+
+
+def render_json(rows: list, price_of) -> None:
+    records = []
+    for src, app, ver, key, det, last in rows:
+        meta = _CASK_META.get(key, {}) if src == "brew" else {}
+        records.append({
+            "source": src, "app": app, "version": ver,
+            "price": price_of(src, app, key),
+            "status": meta.get("status", "ok") if src == "brew" else "ok",
+            "outdated": meta.get("outdated", False),
+            "auto_updates": meta.get("auto_updates") if src == "brew" else None,
+            "desc": meta.get("desc", ""),
+            "last_used": last, "detail": det,
+        })
+    print(json.dumps(records, indent=2, ensure_ascii=False))
+
+
+def render_table(rows: list, counts: dict, price_of, missing: list, stale: list) -> None:
+    use_color = sys.stdout.isatty()
+
+    def paint(text: str, code: str) -> str:
+        return f"{code}{text}{RESET}" if use_color and code else text
+
+    def cell(text: str, width: int, code: str = "") -> str:
+        return paint(f"{text:<{width}}", code) if width else paint(text, code)
+
+    print("  ".join(h.ljust(w) if w else h for h, w in TABLE_COLUMNS))
+    print("─" * (sum(w for _, w in TABLE_COLUMNS) + 2 * (len(TABLE_COLUMNS) - 1) + 10))
+
+    for src, app, ver, key, det, last in rows:
+        price = price_of(src, app, key)
+        flags = state_flags(src, key)
+        state = "+".join(flags)
+        state_code = next(
+            (STATE_COLORS[f] for f in ("dis", "dep", "out", "auto") if f in flags), ""
+        )
+        widths = [w for _, w in TABLE_COLUMNS]
+        print("  ".join([
+            cell(src, widths[0], SRC_COLORS.get(src, "")),
+            cell(app, widths[1]),
+            cell(ver, widths[2]),
+            cell(state, widths[3], state_code),
+            cell(price, widths[4], PRICE_COLORS.get(price, "")),
+            cell(last, widths[5]),
+            cell(det, widths[6]),
+        ]))
+
+    print()
+    total = sum(counts.values())
+    print("  ".join(
+        paint(f"{name}: {counts[name]}", SRC_COLORS[name])
+        for name in ("brew", "mas", "manual")
+    ) + f"  total: {total}")
+
+    if missing or stale:
+        print()
+        print_audit(missing, stale, always_ok=False)
 
 
 def main() -> None:
@@ -306,159 +497,17 @@ def main() -> None:
                         help="report apps without price annotation and stale entries")
     args = parser.parse_args()
 
-    brew = _brew_app_map()
-    mas  = _mas_app_map()
+    rows, counts = collect_rows(args.filter)
     annotations = _load_annotations()
-
-    rows: list   = []
-    counts: dict = {"brew": 0, "mas": 0, "manual": 0}
-    seen_stems: set = set()
-
-    for appdir in _APP_DIRS:
-        if not os.path.isdir(appdir):
-            continue
-        for entry in os.listdir(appdir):
-            if not entry.endswith(".app"):
-                continue
-            stem = entry[:-4]
-            if stem in seen_stems:
-                continue
-            seen_stems.add(stem)
-            app_path = os.path.join(appdir, entry)
-            last = _last_used(app_path)
-
-            if stem in brew:
-                token, ver = brew[stem]
-                src, detail, key = "brew", f"cask: {token}", token
-            elif stem in mas:
-                mas_id, ver = mas[stem]
-                src, detail, key = "mas", f"id: {mas_id}", mas_id
-            else:
-                src, detail, key = "manual", appdir, _normalize(stem)
-                try:
-                    r = subprocess.run(
-                        ["mdls", "-name", "kMDItemVersion", app_path],
-                        capture_output=True, text=True, timeout=5,
-                    )
-                    ver = r.stdout.split("=", 1)[-1].strip().strip('"')
-                    if ver == "(null)":
-                        ver = ""
-                except Exception:
-                    ver = ""
-
-            counts[src] += 1
-            if args.filter and src != args.filter:
-                continue
-            rows.append((src, stem, ver, key, detail, last))
-
-    rows.sort()
-
-    mas_price = _mas_prices([key for src, _, _, key, _, _ in rows if src == "mas"])
-
-    def price_of(src: str, stem: str, key: str) -> str:
-        if src == "mas" and key in mas_price:
-            return mas_price[key]
-        return annotations.get(key) or annotations.get(_normalize(stem)) or "unknown"
-
-    # Tier 3: auto-resolve unknown casks whose GitHub homepage carries an OSS
-    # license, and cache the result in the annotations file.
-    auto_lines = []
-    for src, stem, _, key, _, _ in rows:
-        if src != "brew" or price_of(src, stem, key) != "unknown":
-            continue
-        spdx = _github_license(_CASK_HOMEPAGES.get(key, ""))
-        if spdx:
-            annotations[key] = "free"
-            auto_lines.append(f"{key} = free  # auto: {spdx} license on GitHub")
-    if auto_lines:
-        try:
-            with open(_ANNOTATIONS_PATH, "a", encoding="utf-8") as fh:
-                fh.write("\n".join(auto_lines) + "\n")
-        except OSError:
-            pass
-
-    installed_keys = set()
-    for src, stem, _, key, _, _ in rows:
-        installed_keys.add(key)
-        installed_keys.add(_normalize(stem))
-    missing_by_key: dict = {}
-    for src, stem, _, key, _, _ in rows:
-        if price_of(src, stem, key) == "unknown":
-            missing_by_key.setdefault(
-                key if src != "mas" else _normalize(stem), (stem, src)
-            )
-    missing = sorted((k, stem, src) for k, (stem, src) in missing_by_key.items())
-    stale = sorted(k for k in annotations if k not in installed_keys)
-
-    def print_audit(always_ok: bool) -> None:
-        if missing:
-            print("# apps without price annotation — fill in and append to list-apps.annotations:")
-            for key, stem, src in missing:
-                print(f"{key} =    # {stem} ({src})")
-        if stale:
-            print("# stale annotation entries (app no longer installed):")
-            for k in stale:
-                print(f"#   {k}")
-        if always_ok and not missing and not stale:
-            print("annotations complete and clean")
+    price_of = resolve_prices(rows, annotations)
+    missing, stale = compute_audit(rows, annotations, price_of)
 
     if args.audit:
-        print_audit(always_ok=True)
-        return
-
-    def status_of(src: str, key: str) -> str:
-        return _CASK_STATUS.get(key, "ok") if src == "brew" else "ok"
-
-    if args.json:
-        print(json.dumps(
-            [{"source": src, "app": app, "version": ver,
-              "price": price_of(src, app, key),
-              "status": status_of(src, key),
-              "outdated": _CASK_OUTDATED.get(key, False) if src == "brew" else False,
-              "auto_updates": _CASK_AUTOUPDATES.get(key) if src == "brew" else None,
-              "desc": _CASK_DESC.get(key, "") if src == "brew" else "",
-              "last_used": last, "detail": det}
-             for src, app, ver, key, det, last in rows],
-            indent=2, ensure_ascii=False,
-        ))
+        print_audit(missing, stale, always_ok=True)
+    elif args.json:
+        render_json(rows, price_of)
     else:
-        src_color   = {"brew": "\033[33m", "mas": "\033[34m", "manual": "\033[35m"}
-        price_color = {"paid": "\033[31m", "free": "\033[32m", "unknown": "\033[2m"}
-        reset = "\033[0m"
-        use_color = sys.stdout.isatty()
-
-        def paint(text: str, code: str) -> str:
-            return f"{code}{text}{reset}" if use_color and code else text
-
-        print(f"{'SOURCE':<8}  {'APP':<38}  {'VERSION':<14}  {'STATE':<8}  {'PRICE':<8}  {'LAST USED':<10}  DETAIL")
-        print("\u2500" * 108)
-        for src, app, ver, key, det, last in rows:
-            price = price_of(src, app, key)
-            status = status_of(src, key)
-            flags = []
-            if status == "deprecated":
-                flags.append("dep")
-            elif status == "disabled":
-                flags.append("dis")
-            if src == "brew" and _CASK_OUTDATED.get(key):
-                flags.append("out")
-            state = "+".join(flags)
-            state_code = ("\033[31m" if "dis" in flags else
-                          "\033[33m" if "dep" in flags else
-                          "\033[36m" if flags else "")
-            print(f"{paint(f'{src:<8}', src_color.get(src, ''))}  {app:<38}  "
-                  f"{ver:<14}  {paint(f'{state:<8}', state_code)}  "
-                  f"{paint(f'{price:<8}', price_color.get(price, ''))}  "
-                  f"{last:<10}  {det}")
-        print()
-        total = sum(counts.values())
-        print("  ".join(
-            paint(f"{name}: {counts[name]}", src_color[name])
-            for name in ("brew", "mas", "manual")
-        ) + f"  total: {total}")
-        if missing or stale:
-            print()
-            print_audit(always_ok=False)
+        render_table(rows, counts, price_of, missing, stale)
 
 
 if __name__ == "__main__":
