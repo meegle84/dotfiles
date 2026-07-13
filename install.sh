@@ -14,7 +14,13 @@ if ! command -v brew &>/dev/null; then
 fi
 
 step="brew bundle"
-brew bundle --file "${BASEDIR}/brew/Brewfile"
+# Modular manifests, applied in dependency order. The mas module is
+# non-fatal: it needs an App Store session, which cannot be automated.
+for manifest in Brewfile.taps Brewfile.formulae Brewfile.casks; do
+  brew bundle --file "${BASEDIR}/brew/${manifest}"
+done
+brew bundle --file "${BASEDIR}/brew/Brewfile.mas" ||
+  echo "WARN: mas apps not installed (sign in to the App Store and re-run)" >&2
 
 step="backup of pre-existing files"
 # A regular file or directory at a link target makes dotbot fail (force is
