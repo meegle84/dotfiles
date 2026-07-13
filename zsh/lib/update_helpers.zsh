@@ -27,10 +27,10 @@ dot_update_require_cmd() {
   }
 }
 
-# Regenerate the modular brew manifests (Brewfile.taps/.formulae/.casks)
+# Regenerate the modular brew manifests (Brewfile.taps/.formulae/.casks/.mas)
 # from the live system state. No canonical Brewfile is kept: the dump goes
-# to a temp file and only the split modules are written. mas/vscode entries
-# are intentionally not carried into the modules (pending decision).
+# to a temp file and only the split modules are written. vscode extension
+# entries are intentionally dropped (VS Code Settings Sync owns those).
 dot_update_refresh_brew_manifests() {
   emulate -L zsh
   setopt no_unset pipefail
@@ -56,11 +56,12 @@ dot_update_refresh_brew_manifests() {
   }
 
   # Each entry keeps the description comment --describe put right above it.
-  for kind in tap brew cask; do
+  for kind in tap brew cask mas; do
     case "$kind" in
       tap)  outfile="$modules_dir/Brewfile.taps" ;;
       brew) outfile="$modules_dir/Brewfile.formulae" ;;
       cask) outfile="$modules_dir/Brewfile.casks" ;;
+      mas)  outfile="$modules_dir/Brewfile.mas" ;;
     esac
     {
       print -r -- "$header"
