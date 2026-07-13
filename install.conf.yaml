@@ -13,3 +13,10 @@
     ~/.local/bin/caskup: bin/caskup
     ~/.local/bin/osxup: bin/osxup
     ~/.local/bin/list-apps: bin/list-apps
+    ~/.local/bin/defaults-diff: bin/defaults-diff
+
+- shell:
+    - description: Applying macOS defaults
+      command: bash scripts/macos-defaults.sh
+      stdout: true
+      stderr: true

@@ -14,8 +14,10 @@ Requires Xcode Command Line Tools (`xcode-select --install`); Homebrew is instal
 
 1. `brew bundle` — the modular manifests in `brew/`, in order: taps, formulae, casks, and App Store apps (`Brewfile.mas`, skipped with a warning when no App Store session is available)
 2. Backup — pre-existing regular files at link targets are moved aside to `<path>.pre-dotfiles` (never deleted)
-3. dotbot — symlinks (`~/.zshenv`, `~/.zsh`, `~/.gitconfig`) per `install.conf.yaml`
+3. dotbot — symlinks (`~/.zshenv`, `~/.zsh`, `~/.gitconfig`) and macOS defaults (`scripts/macos-defaults.sh`) per `install.conf.yaml`
 4. `pre-commit install` — repo quality gates
+
+Optional, not part of the bootstrap (needs sudo): `scripts/f5f6-brightness.sh` remaps F5/F6 to brightness on Apple Silicon keyboards.
 
 If a step fails, the error names it (`install failed during: <step>`).
 
