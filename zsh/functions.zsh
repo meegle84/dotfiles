@@ -25,6 +25,11 @@ weather() {
   curl -s "https://wttr.in/${1:-Barcelona}?M2F&format=v2"
 }
 
+# Merge/remove AppleDouble (._*) files on a volume (defaults to cwd).
+cleandots() {
+  dot_clean -m "${1:-.}"
+}
+
 # Delete all local Time Machine snapshots.
 tmdeletelocalsnapshots() {
   local d
