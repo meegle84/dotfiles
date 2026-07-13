@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.local.KeyRemapping</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/hidutil</string>
+    <string>property</string>
+    <string>--set</string>
+    <string>{"UserKeyMapping":[
+      {"HIDKeyboardModifierMappingSrc":0xC000000CF,"HIDKeyboardModifierMappingDst":0xFF00000009},
+      {"HIDKeyboardModifierMappingSrc":0x10000009B,"HIDKeyboardModifierMappingDst":0xFF00000008}
+    ]}</string>
+  </array>
+
+  <!-- Clave para que se ejecute en la sesión gráfica del usuario -->
+  <key>LimitLoadToSessionType</key>
+  <string>Aqua</string>
+
+  <!-- Lánzalo al iniciar sesión -->
+  <key>RunAtLoad</key>
+  <true/>
+
+  <!-- Útil para depurar -->
+  <key>StandardOutPath</key>
+  <string>/tmp/com.local.KeyRemapping.out</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/com.local.KeyRemapping.err</string>
+</dict>
+</plist>
